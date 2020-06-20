@@ -108,14 +108,14 @@ public:
         std::lock_guard<std::mutex> guard(m_mutex);
 
         // Do not subscribe twice
-        auto it = std::find_if(m_FunctionList.begin(), m_FunctionList.end(),
+        auto it = std::find_if(m_functionList.begin(), m_functionList.end(),
             [&subscriber](const auto& value) {
                 return value->subscriber == &subscriber;
             });
-        if (it != m_FunctionList.end()) { return false; }
+        if (it != m_functionList.end()) { return false; }
 
         if (Publisher::Subscribe(subscriber)) {
-            m_FunctionList.push_back(std::make_unique<EventData<Types...>>(&subscriber, func, eventLoop ));
+            m_functionList.push_back(std::make_unique<EventData<Types...>>(&subscriber, func, eventLoop ));
             return true;
         }
         return false;
@@ -144,7 +144,7 @@ public:
     void SubscribePersistent(const std::function<void(Types ...)>& func, IEventLoop* eventLoop = nullptr) override
     {
         std::lock_guard<std::mutex> guard(m_mutex);
-        this->m_FunctionList.push_back(std::make_unique<EventData<Types ...>>(nullptr, func, eventLoop));
+        this->m_functionList.push_back(std::make_unique<EventData<Types ...>>(nullptr, func, eventLoop));
     }
 
     /// <summary>
@@ -184,22 +184,31 @@ public:
     /// The event parameters match the template arguments of the class. 
     /// </summary>
     /// <param name="args..."> The parameters used to trigger the callables. </param>
-    virtual void Trigger(Types ... args) {
-        std::lock_guard<std::mutex> guard(m_mutex);
+    virtual void Trigger(Types ... args)
+    {
+        // Subscriber data is copied to avoid having the mutex locked when event funtions are called.
+        // This will prevent a potential deadlocked if subscribers unsubscribe or triggers the same event during event triggered code.
+        std::vector<std::pair<std::function<void(Types ...)>, IEventLoop*>> functionList;
+        m_mutex.lock();
+        for (auto& data : this->m_functionList)
+        {
+            functionList.emplace_back(data->func, data->eventLoop);
+        }
+        m_mutex.unlock();
 
-        for (auto& data : this->m_FunctionList) {
-            if (data->eventLoop == nullptr) {
+        for (auto data : functionList) {
+            if (data.second == nullptr) {
                 // triggers the function directly when no eventLopp is defined
-                data->func(args ...);
+                data.first(args ...);
             } else {
                 if constexpr (sizeof...(args) == 0) {
                     // The function is already a callable void(void) function so it is just added to the event loop.
-                    data->eventLoop->Enqueue(data->func);
+                    data.second->Enqueue(data.first);
                 } else {
                     // Encapsulates the function call in a void(void) lambda and queue it on the event loop. 
-                    data->eventLoop->Enqueue(
-                        [&data, args ...]() {
-                            data->func(args ...);
+                    data.second->Enqueue(
+                        [data, args ...]() {
+                            data.first(args ...);
                         }
                     );
                 }
@@ -217,9 +226,9 @@ protected:
     {
         std::lock_guard<std::mutex> guard(m_mutex);
 
-        auto it = std::find_if(m_FunctionList.begin(), m_FunctionList.end(), [subscriber](const auto& data) { return data->subscriber == subscriber; });
-        if (it != m_FunctionList.end()) {
-            m_FunctionList.erase(it);
+        auto it = std::find_if(m_functionList.begin(), m_functionList.end(), [subscriber](const auto& data) { return data->subscriber == subscriber; });
+        if (it != m_functionList.end()) {
+            m_functionList.erase(it);
         }
     }
     
@@ -235,7 +244,7 @@ protected:
     /// - Optional subscriber that can be used to unsubscribe to the event.
     /// - Optional event loop where the function will be called if provided.
     /// </summary>
-    std::vector<std::unique_ptr<EventData<Types ...>>> m_FunctionList;
+    std::vector<std::unique_ptr<EventData<Types ...>>> m_functionList;
 };
 
 } // namespace VLS::Event
