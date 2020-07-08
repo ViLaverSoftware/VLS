@@ -49,13 +49,13 @@ public:
     /// 
     /// </summary>
     /// <param name="">  </param>
-    /// <return>  </return>
+    /// <returns>  </returns>
     bool Unsubscribe(Publisher& publisher);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <return>  </return>
+    /// <returns>  </returns>
     size_t PublisherCount() const;
 
 private:
@@ -63,14 +63,14 @@ private:
     /// 
     /// </summary>
     /// <param name="">  </param>
-    /// <return>  </return>
+    /// <returns>  </returns>
     bool _subscribe(Publisher* publisher);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="">  </param>
-    /// <return>  </return>
+    /// <returns>  </returns>
     bool _unsubsribe(Publisher* publisher);
 
 private:

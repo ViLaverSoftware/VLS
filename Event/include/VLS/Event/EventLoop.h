@@ -54,14 +54,14 @@ public:
     /// 
     /// </summary>
     /// <param name="">  </param>
-    /// <return>  </return>
+    /// <returns>  </returns>
     bool Start(const std::string& name = std::string());
     bool Stop();
 
     /// <summary>
     /// 
     /// </summary>
-    /// <return>  </return>
+    /// <returns>  </returns>
     static const std::string& ThreadName();
 
 private:

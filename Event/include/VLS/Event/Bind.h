@@ -30,10 +30,10 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(void)> from a void(void) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
     /// <param name="funcObj"> Object the function belongs to. </param>
     /// <param name="func"> Member function pointer with no arguments. </param>
-    /// <return> Callable that returns void and takes no parameters. </return>
+    /// <returns> Callable that returns void and takes no parameters. </returns>
     template<typename TObj>
     static std::function<void()> Bind(TObj* funcObj, void (TObj::* func)())
     {
@@ -43,11 +43,11 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(T)> from a void(T) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
-    /// <tparam name="T"> Type of the funtion argument. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
+    /// <typeparam  name="T"> Type of the funtion argument. </typeparam >
     /// <param name="funcObj"> Object the function belongs to. </param>
     /// <param name="func"> Member function pointer with one argument. </param>
-    /// <return> Callable that returns void and takes one parameter. </return>
+    /// <returns> Callable that returns void and takes one parameter. </returns>
     template<typename TObj, typename T>
     static std::function<void(T)> Bind(TObj* funcObj, void (TObj::* func)(T))
     {
@@ -57,12 +57,12 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(T1, T2)> from a void(T1, T2) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
-    /// <tparam name="T1"> Type of the 1. funtion argument. </param>
-    /// <tparam name="T2"> Type of the 2. funtion argument. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
+    /// <typeparam  name="T1"> Type of the 1. funtion argument. </typeparam >
+    /// <typeparam  name="T2"> Type of the 2. funtion argument. </typeparam >
     /// <param name="funcObj"> Object the function belongs to. </param>
     /// <param name="func"> Member function pointer with two arguments. </param>
-    /// <return> Callable that returns void and takes two parameters. </return>
+    /// <returns> Callable that returns void and takes two parameters. </returns>
     template<typename TObj, typename T1, typename T2>
     static std::function<void(T1, T2)> Bind(TObj* funcObj, void (TObj::* func)(T1, T2))
     {
@@ -72,13 +72,13 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(T1, T2, T3)> from a void(T1, T2, T3) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
-    /// <tparam name="T1"> Type of the 1. funtion argument. </param>
-    /// <tparam name="T2"> Type of the 2. funtion argument. </param>
-    /// <tparam name="T3"> Type of the 3. funtion argument. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
+    /// <typeparam  name="T1"> Type of the 1. funtion argument. </typeparam >
+    /// <typeparam  name="T2"> Type of the 2. funtion argument. </typeparam >
+    /// <typeparam  name="T3"> Type of the 3. funtion argument. </typeparam >
     /// <param name="funcObj"> Object the function belongs to. </param>
     /// <param name="func"> Member function pointer with three arguments. </param>
-    /// <return> Callable that returns void and takes three parameters. </return>
+    /// <returns> Callable that returns void and takes three parameters. </returns>
     template<typename TObj, typename T1, typename T2, typename T3>
     static std::function<void(T1, T2, T3)> Bind(TObj* funcObj, void (TObj::* func)(T1, T2, T3))
     {
@@ -88,14 +88,14 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(T1, T2, T3, T4)> from a void(T1, T2, T3, T4) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
-    /// <tparam name="T1"> Type of the 1. funtion argument. </param>
-    /// <tparam name="T2"> Type of the 2. funtion argument. </param>
-    /// <tparam name="T3"> Type of the 3. funtion argument. </param>
-    /// <tparam name="T4"> Type of the 4. funtion argument. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
+    /// <typeparam  name="T1"> Type of the 1. funtion argument. </typeparam >
+    /// <typeparam  name="T2"> Type of the 2. funtion argument. </typeparam >
+    /// <typeparam  name="T3"> Type of the 3. funtion argument. </typeparam >
+    /// <typeparam  name="T4"> Type of the 4. funtion argument. </typeparam >
     /// <param name="funcObj"> Object the function belongs to. </param>
     /// <param name="func"> Member function pointer with four arguments. </param>
-    /// <return> Callable that returns void and takes four parameters. </return>
+    /// <returns> Callable that returns void and takes four parameters. </returns>
     template<typename TObj, typename T1, typename T2, typename T3, typename T4>
     static std::function<void(T1, T2, T3, T4)> Bind(TObj* funcObj, void (TObj::* func)(T1, T2, T3, T4))
     {
@@ -105,15 +105,15 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(T1, T2, T3, T4, T5)> from a void(T1, T2, T3, T4, T5) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
-    /// <tparam name="T1"> Type of the 1. funtion argument. </param>
-    /// <tparam name="T2"> Type of the 2. funtion argument. </param>
-    /// <tparam name="T3"> Type of the 3. funtion argument. </param>
-    /// <tparam name="T4"> Type of the 4. funtion argument. </param>
-    /// <tparam name="T5"> Type of the 5. funtion argument. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
+    /// <typeparam  name="T1"> Type of the 1. funtion argument. </typeparam >
+    /// <typeparam  name="T2"> Type of the 2. funtion argument. </typeparam >
+    /// <typeparam  name="T3"> Type of the 3. funtion argument. </typeparam >
+    /// <typeparam  name="T4"> Type of the 4. funtion argument. </typeparam >
+    /// <typeparam  name="T5"> Type of the 5. funtion argument. </typeparam >
     /// <param name="funcObj"> Object the function belongs to. </param>
     /// <param name="func"> Member function pointer with five arguments. </param>
-    /// <return> Callable that returns void and takes five parameters. </return>
+    /// <returns> Callable that returns void and takes five parameters. </returns>
     template<typename TObj, typename T1, typename T2, typename T3, typename T4, typename T5>
     static std::function<void(T1, T2, T3, T4, T5)> Bind(TObj* funcObj, void (TObj::* func)(T1, T2, T3, T4, T5))
     {
@@ -123,16 +123,16 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(T1, T2, T3, T4, T5, T6)> from a void(T1, T2, T3, T4, T5, T6) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
-    /// <tparam name="T1"> Type of the 1. funtion argument. </param>
-    /// <tparam name="T2"> Type of the 2. funtion argument. </param>
-    /// <tparam name="T3"> Type of the 3. funtion argument. </param>
-    /// <tparam name="T4"> Type of the 4. funtion argument. </param>
-    /// <tparam name="T5"> Type of the 5. funtion argument. </param>
-    /// <tparam name="T6"> Type of the 6. funtion argument. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
+    /// <typeparam  name="T1"> Type of the 1. funtion argument. </typeparam >
+    /// <typeparam  name="T2"> Type of the 2. funtion argument. </typeparam >
+    /// <typeparam  name="T3"> Type of the 3. funtion argument. </typeparam >
+    /// <typeparam  name="T4"> Type of the 4. funtion argument. </typeparam >
+    /// <typeparam  name="T5"> Type of the 5. funtion argument. </typeparam >
+    /// <typeparam  name="T6"> Type of the 6. funtion argument. </typeparam >
     /// <param name="funcObj"> Object the function belongs to. </param>
     /// <param name="func"> Member function pointer with six arguments. </param>
-    /// <return> Callable that returns void and takes six parameters. </return>
+    /// <returns> Callable that returns void and takes six parameters. </returns>
     template<typename TObj, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
     static std::function<void(T1, T2, T3, T4, T5, T6)> Bind(TObj* funcObj, void (TObj::* func)(T1, T2, T3, T4, T5, T6))
     {
@@ -142,17 +142,17 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(T1, T2, T3, T4, T5, T6, T7)> from a void(T1, T2, T3, T4, T5, T6, T7) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
-    /// <tparam name="T1"> Type of the 1. funtion argument. </param>
-    /// <tparam name="T2"> Type of the 2. funtion argument. </param>
-    /// <tparam name="T3"> Type of the 3. funtion argument. </param>
-    /// <tparam name="T4"> Type of the 4. funtion argument. </param>
-    /// <tparam name="T5"> Type of the 5. funtion argument. </param>
-    /// <tparam name="T6"> Type of the 6. funtion argument. </param>
-    /// <tparam name="T7"> Type of the 7. funtion argument. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
+    /// <typeparam  name="T1"> Type of the 1. funtion argument. </typeparam >
+    /// <typeparam  name="T2"> Type of the 2. funtion argument. </typeparam >
+    /// <typeparam  name="T3"> Type of the 3. funtion argument. </typeparam >
+    /// <typeparam  name="T4"> Type of the 4. funtion argument. </typeparam >
+    /// <typeparam  name="T5"> Type of the 5. funtion argument. </typeparam >
+    /// <typeparam  name="T6"> Type of the 6. funtion argument. </typeparam >
+    /// <typeparam  name="T7"> Type of the 7. funtion argument. </typeparam >
     /// <param name="funcObj"> Object the function belongs to. </param>
     /// <param name="func"> Member function pointer with seven arguments. </param>
-    /// <return> Callable that returns void and takes seven parameters. </return>
+    /// <returns> Callable that returns void and takes seven parameters. </returns>
     template<typename TObj, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
     static std::function<void(T1, T2, T3, T4, T5, T6, T7)> Bind(TObj* funcObj, void (TObj::* func)(T1, T2, T3, T4, T5, T6, T7))
     {
@@ -162,18 +162,18 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(T1, T2, T3, T4, T5, T6, T7, T8)> from a void(T1, T2, T3, T4, T5, T6, T7, T8) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
-    /// <tparam name="T1"> Type of the 1. funtion argument. </param>
-    /// <tparam name="T2"> Type of the 2. funtion argument. </param>
-    /// <tparam name="T3"> Type of the 3. funtion argument. </param>
-    /// <tparam name="T4"> Type of the 4. funtion argument. </param>
-    /// <tparam name="T5"> Type of the 5. funtion argument. </param>
-    /// <tparam name="T6"> Type of the 6. funtion argument. </param>
-    /// <tparam name="T7"> Type of the 7. funtion argument. </param>
-    /// <tparam name="T8"> Type of the 8. funtion argument. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
+    /// <typeparam  name="T1"> Type of the 1. funtion argument. </typeparam >
+    /// <typeparam  name="T2"> Type of the 2. funtion argument. </typeparam >
+    /// <typeparam  name="T3"> Type of the 3. funtion argument. </typeparam >
+    /// <typeparam  name="T4"> Type of the 4. funtion argument. </typeparam >
+    /// <typeparam  name="T5"> Type of the 5. funtion argument. </typeparam >
+    /// <typeparam  name="T6"> Type of the 6. funtion argument. </typeparam >
+    /// <typeparam  name="T7"> Type of the 7. funtion argument. </typeparam >
+    /// <typeparam  name="T8"> Type of the 8. funtion argument. </typeparam >
     /// <param name="funcObj"> Object the function belongs to. </param>
     /// <param name="func"> Member function pointer with eight arguments. </param>
-    /// <return> Callable that returns void and takes eight parameters. </return>
+    /// <returns> Callable that returns void and takes eight parameters. </returns>
     template<typename TObj, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
     static std::function<void(T1, T2, T3, T4, T5, T6, T7, T8)> Bind(TObj* funcObj, void (TObj::* func)(T1, T2, T3, T4, T5, T6, T7, T8))
     {
@@ -183,19 +183,19 @@ public:
     /// <summary>
     /// Create a callable std::fucntion<void(T1, T2, T3, T4, T5, T6, T7, T8, T9)> from a void(T1, T2, T3, T4, T5, T6, T7, T8, T9) member function.
     /// </summary>
-    /// <tparam name="TObj"> Class of the funcObj. </param>
-    /// <tparam name="T1"> Type of the 1. funtion argument. </param>
-    /// <tparam name="T2"> Type of the 2. funtion argument. </param>
-    /// <tparam name="T3"> Type of the 3. funtion argument. </param>
-    /// <tparam name="T4"> Type of the 4. funtion argument. </param>
-    /// <tparam name="T5"> Type of the 5. funtion argument. </param>
-    /// <tparam name="T6"> Type of the 6. funtion argument. </param>
-    /// <tparam name="T7"> Type of the 7. funtion argument. </param>
-    /// <tparam name="T8"> Type of the 8. funtion argument. </param>
-    /// <tparam name="T9"> Type of the 9. funtion argument. </param>
-    /// <param name="funcObj"> Object the function belongs to. </param>
+    /// <typeparam  name="TObj"> Class of the funcObj. </typeparam >
+    /// <typeparam  name="T1"> Type of the 1. funtion argument. </typeparam >
+    /// <typeparam  name="T2"> Type of the 2. funtion argument. </typeparam >
+    /// <typeparam  name="T3"> Type of the 3. funtion argument. </typeparam >
+    /// <typeparam  name="T4"> Type of the 4. funtion argument. </typeparam >
+    /// <typeparam  name="T5"> Type of the 5. funtion argument. </typeparam >
+    /// <typeparam  name="T6"> Type of the 6. funtion argument. </typeparam >
+    /// <typeparam  name="T7"> Type of the 7. funtion argument. </typeparam >
+    /// <typeparam  name="T8"> Type of the 8. funtion argument. </typeparam >
+    /// <typeparam  name="T9"> Type of the 9. funtion argument. </typeparam >
+    /// <param  name="funcObj"> Object the function belongs to. </param >
     /// <param name="func"> Member function pointer with nine arguments. </param>
-    /// <return> Callable that returns void and takes nine parameters. </return>
+    /// <returns> Callable that returns void and takes nine parameters. </returns>
     template<typename TObj, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
     static std::function<void(T1, T2, T3, T4, T5, T6, T7, T8, T9)> Bind(TObj* funcObj, void (TObj::* func)(T1, T2, T3, T4, T5, T6, T7, T8, T9))
     {

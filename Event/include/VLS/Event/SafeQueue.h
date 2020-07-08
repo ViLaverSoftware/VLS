@@ -23,14 +23,10 @@
 namespace VLS::Event {
 
 /// <summary>
-/// 
+/// A threadsafe queue
+/// The thread-safe queue is used by the async Event::HandlerAsync to transfer
+/// event arguments from the trigger thread to a seperate worker thread
 /// </summary>
-/**
- * @brief       A threadsafe queue
- *
- * The thread-safe queue is used by the async Event::HandlerAsync to transfer
- * event arguments from the trigger thread to a seperate worker thread
- */
 template <class T>
 class SafeQueue
 {
@@ -47,13 +43,9 @@ public:
     SafeQueue(const SafeQueue&) = delete;
 
     /// <summary>
-    /// 
+    /// Add a element to the queue
     /// </summary>
-    /// <param name="">  </param>
-    /**
-     * @brief       Add a element to the queue
-     * @param[in]   Queue element
-     */
+    /// <param name="value"> Queue element </param>
     void Enqueue(T value)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -62,13 +54,9 @@ public:
     }
 
     /// <summary>
-    /// 
+    /// Get the front element of the queue. Wait if the queue is empty.
     /// </summary>
-    /// <return>  </return>
-    /**
-     * @brief       Get the front element of the queue. Wait if the queue is empty.
-     * @return      Front element of the queue
-     */
+    /// <returns> Front element of the queue </returns>
     T Dequeue()
     {
         std::unique_lock<std::mutex> lock(m_mutex);

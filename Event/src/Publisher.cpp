@@ -31,7 +31,6 @@ Publisher::~Publisher()
 
 bool Publisher::Subscribe(Subscriber& subscriber)
 {
-
     auto it = std::find(m_subscribers.begin(), m_subscribers.end(), &subscriber);
     if (it != m_subscribers.end()) { return false; }
     if (subscriber._subscribe(this)) {

@@ -48,7 +48,7 @@ public:
     /// 
     /// </summary>
     /// <param name="">  </param>
-    /// <return>  </return>
+    /// <returns>  </returns>
     virtual ~Publisher();
 
 protected:
@@ -56,7 +56,7 @@ protected:
     /// 
     /// </summary>
     /// <param name="">  </param>
-    /// <return>  </return>
+    /// <returns>  </returns>
     bool Subscribe(Subscriber& subscriber);
 
     /// <summary>
@@ -70,14 +70,14 @@ private:
     /// 
     /// </summary>
     /// <param name="">  </param>
-    /// <return>  </return>
+    /// <returns>  </returns>
     bool _unsubscribe(Subscriber* subscriber, bool notify = true);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="">  </param>
-    /// <return>  </return>
+    /// <returns>  </returns>
     void _upsubscribeAll(bool notify = true);
 
 
@@ -85,7 +85,7 @@ private:
     /// <summary>
     /// 
     /// </summary>
-    mutable std::vector<Subscriber*> m_subscribers;
+    std::vector<Subscriber*> m_subscribers;
 
     friend class Subscriber;
 };

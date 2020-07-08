@@ -50,10 +50,6 @@ namespace VLS::Event {
 /// 
 /// Warning: Propper care should be taking with function argument to make sure they are still 
 /// in scope when the event loop gets around to calling the enqueued function. 
-/// 
-/// Warning: Make sure not to unsubscribe to the event in the callable that is triggered by the 
-/// event if the callable is triggered directly (No event loop is provided). The mutex will 
-/// create a deadlock.
 /// </summary>
 template<typename ... Types>
 class EventHandler : public Publisher, public IEventHandler<Types ...>
@@ -73,7 +69,7 @@ public:
     /// </summary>
     /// <param name="func"> Callable that will be called when the event is triggered. </param>
     /// <param name="eventLoop"> Optional thread where the callable will be called if provided. </param>
-    /// <return> Unique pointer to subscribe object with a subscription to this event. </return>
+    /// <returns> Unique pointer to subscribe object with a subscription to this event. </returns>
     Subscriber::UPtr Subscribe(const std::function<void(Types ...)>& func, IEventLoop* eventLoop = nullptr) override {
         auto sub = std::make_unique<Subscriber>();
         if (Subscribe(*sub.get(), func, eventLoop)) {
@@ -89,7 +85,7 @@ public:
     /// </summary>
     /// <param name="func"> Free function that will be called when the event is triggered. </param>
     /// <param name="eventLoop"> Optional thread where the free function will be called if provided. </param>
-    /// <return> Unique pointer to subscribe object with a subscription to this event. </return>
+    /// <returns> Unique pointer to subscribe object with a subscription to this event. </returns>
     Subscriber::UPtr Subscribe(void(*func)(Types ...), IEventLoop* eventLoop = nullptr) override
     {
         return Subscribe(std::function<void(Types ...)>(func), eventLoop);
@@ -100,7 +96,7 @@ public:
     /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
     /// The subscriber will receive a subscription so it can unsubscribe and will automaticly unsubscribe if deconstructed.
     /// </summary>
-    /// <param name="subscriber"> The subscriber will receive a subscription to the event so it can unsubscribe to the event. </return>
+    /// <param name="subscriber"> The subscriber will receive a subscription to the event so it can unsubscribe to the event. </param>
     /// <param name="func"> Callable that will be called when the event is triggered. </param>
     /// <param name="eventLoop"> Optional thread where the callable will be called if provided. </param>
     bool Subscribe(Subscriber& subscriber, const std::function<void(Types ...)>& func, IEventLoop* eventLoop = nullptr) override
@@ -126,7 +122,7 @@ public:
     /// The free function will be enqueued to the event loop when the event is triggered if an event loop is provided.
     /// The subscriber will receive a subscription so it can unsubscribe and will automaticly unsubscribe if deconstructed.
     /// </summary>
-    /// <param name="subscriber"> The subscriber will receive a subscription to the event so it can unsubscribe to the event. </return>
+    /// <param name="subscriber"> The subscriber will receive a subscription to the event so it can unsubscribe to the event. </param>
     /// <param name="func"> Free function that will be called when the event is triggered. </param>
     /// <param name="eventLoop"> Optional thread where the free function will be called if provided. </param>
     bool Subscribe(Subscriber& subscriber, void(*func)(Types ...), IEventLoop* eventLoop = nullptr) override
@@ -163,7 +159,7 @@ public:
     /// Wait for the event to trigger and return the parameters as a tuple
     /// </summary>
     /// <param name="timeout"> The maximum time to wait. </param>
-    /// <return> Tuple containing all the parameters used to trigger the event. </return>
+    /// <returns> Tuple containing all the parameters used to trigger the event. </returns>
     std::shared_ptr<std::tuple<Types ...>> Wait(std::chrono::milliseconds timeout = std::chrono::minutes(1)) override
     {
         std::promise<std::tuple<Types ...>> promise;
@@ -183,7 +179,7 @@ public:
     /// Triggers the event by calling all the callables subscribed to the event.
     /// The event parameters match the template arguments of the class. 
     /// </summary>
-    /// <param name="args..."> The parameters used to trigger the callables. </param>
+    /// <param name="args"> The parameters used to trigger the callables. </param>
     virtual void Trigger(Types ... args)
     {
         // Subscriber data is copied to avoid having the mutex locked when event funtions are called.
