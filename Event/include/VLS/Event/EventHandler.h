@@ -26,6 +26,10 @@
 #include "VLS/Event/Publisher.h"
 #include "VLS/Event/EventData.h"
 
+// Multiple subscriptions are allowed for each subscriber as default but can be changed
+// with this flag
+//#define VLS_EVENT_ONE_SUBSCRIPTION_PER_SUBSCRIBER
+
 namespace VLS::Event {
 
 /// <summary>
@@ -102,7 +106,7 @@ public:
     bool Subscribe(Subscriber& subscriber, const std::function<void(Types ...)>& func, IEventLoop* eventLoop = nullptr) override
     {
         std::lock_guard<std::mutex> guard(m_mutex);
-
+#ifdef VLS_EVENT_ONE_SUBSCRIPTION_PER_SUBSCRIBER
         // Do not subscribe twice
         auto it = std::find_if(m_functionList.begin(), m_functionList.end(),
             [&subscriber](const auto& value) {
@@ -111,10 +115,15 @@ public:
         if (it != m_functionList.end()) { return false; }
 
         if (Publisher::Subscribe(subscriber)) {
-            m_functionList.push_back(std::make_unique<EventData<Types...>>(&subscriber, func, eventLoop ));
+            m_functionList.push_back(std::make_unique<EventData<Types...>>(&subscriber, func, eventLoop));
             return true;
         }
         return false;
+#else
+        Publisher::Subscribe(subscriber);
+        m_functionList.push_back(std::make_unique<EventData<Types...>>(&subscriber, func, eventLoop ));
+        return true;
+#endif
     }
 
     /// <summary>
@@ -223,8 +232,9 @@ protected:
         std::lock_guard<std::mutex> guard(m_mutex);
 
         auto it = std::find_if(m_functionList.begin(), m_functionList.end(), [subscriber](const auto& data) { return data->subscriber == subscriber; });
-        if (it != m_functionList.end()) {
+        while (it != m_functionList.end()) {
             m_functionList.erase(it);
+            it = std::find_if(m_functionList.begin(), m_functionList.end(), [subscriber](const auto& data) { return data->subscriber == subscriber; });
         }
     }
     
