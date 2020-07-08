@@ -34,12 +34,23 @@ install(
 )
 
 # Add options to enable tests
-option(VLS_TEST_EVENT_HANDLER "Unit test of the EventHandler module" OFF)
+option(VLS_TEST_EVENT "Event module unit tests" OFF)
 if(NOT DEFINED VLS_TEST_ALL) 
-    option(VLS_TEST_ALL "Unit test of all VLS modules" OFF)
+    option(VLS_TEST_ALL "All VLS modules unit tests" OFF)
 endif(NOT DEFINED VLS_TEST_ALL)
 
 # Add tests directory.
-if(VLS_TEST_ALL OR VLS_TEST_EVENT_HANDLER)
+if(VLS_TEST_ALL OR VLS_TEST_EVENT)
     add_subdirectory(test)
+endif()
+
+# Add options to enable examples
+option(VLS_EXAMPLES_EVENT "Event module examples" OFF)
+if(NOT DEFINED VLS_EXAMPLES_ALL) 
+    option(VLS_EXAMPLES_ALL "All VLS modules examples" OFF)
+endif(NOT DEFINED VLS_EXAMPLES_ALL)
+
+# Add example directory.
+if(VLS_EXAMPLES_ALL OR VLS_EXAMPLES_EVENT)
+    add_subdirectory(examples)
 endif()
