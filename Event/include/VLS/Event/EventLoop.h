@@ -37,7 +37,7 @@ public:
     /// <summary>
     /// 
     /// </summary>
-    EventLoop() = default;
+    EventLoop();
 
     /// <summary>
     /// 
@@ -83,7 +83,7 @@ private:
     /// <summary>
     /// 
     /// </summary>
-    std::atomic_bool m_run = false;
+    std::atomic<bool> m_run;
 
     /// <summary>
     /// 

@@ -32,10 +32,11 @@
 
 namespace VLS::Event {
 
-/// <summary>
-/// EventHandler manages subscriptions to, and triggers events, with arguments matching 
-/// the variadic temple of the class.
-///
+/// <summary> 
+/// Manages subscriptions to, and triggers events, with arguments matching 
+/// the variadic temple of the class. 
+/// </summary>
+/// <remarks>
 /// Subscriptions can be persisten(no unsubscribe option) or be handled by a subscriber. 
 /// If an reference to a subscriber object is provided it will be used, otherwise a unique 
 /// point to a subscriber object will be returned.
@@ -54,7 +55,7 @@ namespace VLS::Event {
 /// 
 /// Warning: Propper care should be taking with function argument to make sure they are still 
 /// in scope when the event loop gets around to calling the enqueued function. 
-/// </summary>
+/// </remarks>
 template<typename ... Types>
 class EventHandler : public Publisher, public IEventHandler<Types ...>
 {
@@ -80,19 +81,6 @@ public:
             return std::move(sub);
         }
         return Subscriber::UPtr();
-    }
-
-    /// <summary>
-    /// Subscribes to the event by providing a free function that will be called when the event is triggered. 
-    /// The free function will be enqueued to the event loop when the event is triggered if an event loop is provided.
-    /// The returned subscriber object can unsubscribe and will automaticly unsubscribe if deconstructed.
-    /// </summary>
-    /// <param name="func"> Free function that will be called when the event is triggered. </param>
-    /// <param name="eventLoop"> Optional thread where the free function will be called if provided. </param>
-    /// <returns> Unique pointer to subscribe object with a subscription to this event. </returns>
-    Subscriber::UPtr Subscribe(void(*func)(Types ...), IEventLoop* eventLoop = nullptr) override
-    {
-        return Subscribe(std::function<void(Types ...)>(func), eventLoop);
     }
 
     /// <summary>
@@ -127,19 +115,6 @@ public:
     }
 
     /// <summary>
-    /// Subscribes to the event by providing a free function that will be called when the event is triggered. 
-    /// The free function will be enqueued to the event loop when the event is triggered if an event loop is provided.
-    /// The subscriber will receive a subscription so it can unsubscribe and will automaticly unsubscribe if deconstructed.
-    /// </summary>
-    /// <param name="subscriber"> The subscriber will receive a subscription to the event so it can unsubscribe to the event. </param>
-    /// <param name="func"> Free function that will be called when the event is triggered. </param>
-    /// <param name="eventLoop"> Optional thread where the free function will be called if provided. </param>
-    bool Subscribe(Subscriber& subscriber, void(*func)(Types ...), IEventLoop* eventLoop = nullptr) override
-    {
-        return Subscribe(subscriber, std::function<void(Types ...)>(func), eventLoop);
-    }
-
-    /// <summary>
     /// Subscribes to the event by providing a callable that will be called when the event is triggered. 
     /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
     /// It is not possible to unsubscribe when the persistent version of the subscribe function is used.
@@ -150,18 +125,6 @@ public:
     {
         std::lock_guard<std::mutex> guard(m_mutex);
         this->m_functionList.push_back(std::make_unique<EventData<Types ...>>(nullptr, func, eventLoop));
-    }
-
-    /// <summary>
-    /// Subscribes to the event by providing a free function that will be called when the event is triggered. 
-    /// The free function will be enqueued to the event loop when the event is triggered if an event loop is provided.
-    /// It is not possible to unsubscribe when the persistent version of the subscribe function is used.
-    /// </summary>
-    /// <param name="func"> Free function that will be called when the event is triggered. </param>
-    /// <param name="eventLoop"> Optional thread where the free function will be called if provided. </param>
-    void SubscribePersistent(void(*func)(Types ...), IEventLoop* eventLoop = nullptr) override
-    {
-        Subscribe(std::function<void(Types ...)>(func), eventLoop);
     }
 
     /// <summary>
@@ -227,7 +190,7 @@ protected:
     /// It will remove the subscriber and the callable from the list that will be called when the event is triggered.
     /// </summary>
     /// <param name="subscriber"> Subscriber that will be removed. </param>
-    void OnUnsubscribe(Subscriber* subscriber)
+    void OnUnsubscribe(Subscriber* subscriber) override
     {
         std::lock_guard<std::mutex> guard(m_mutex);
 

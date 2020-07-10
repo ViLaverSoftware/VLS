@@ -22,6 +22,12 @@ namespace VLS::Event {
 std::map<std::thread::id, std::string> EventLoop::s_threadNameMap;
 std::string EventLoop::s_defaultThreadName = "Noname";
 
+EventLoop::EventLoop()
+    : m_run(false)
+{
+
+}
+
 EventLoop::~EventLoop()
 {
     Stop();

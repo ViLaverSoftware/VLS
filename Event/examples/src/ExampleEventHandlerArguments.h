@@ -15,16 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#pragma once
 
-#include "ExampleEventHandlerArguments.h"
-#include "ExampleEventHandlerCallbackFunctions.h"
-#include "ExampleEventHandlerUnsubscribe.h"
-#include "ExampleEventHandlerAdvanced.h"
+#include "VLS/Event/EventHandler.h"
+#include <iostream>
 
-int main()
+using namespace std;
+
+void ExampleEventHandlerArguments()
 {
-    ExampleEventHandlerArguments();
-    ExampleEventHandlerCallbackFunctions();
-    ExampleEventHandlerUnsubscribe();
-    ExampleEventHandlerAdvanced();
+    cout << "Example EventHandler Arguments" << endl;
+
+    // Create a event handler with two event arguments
+    VLS::Event::EventHandler<std::string, int> valueChanged;
+
+    // Subscribe to the event with a lambda function without an unsubscibe option
+    valueChanged.SubscribePersistent([](const std::string& text, int number){ 
+        cout << text << " (" << number << ")" << endl; 
+    });
+
+    // Trigger the event
+    cout << "> Trigger event: ";
+    valueChanged.Trigger("Hello World", 42);
+
+    cout << endl;
 }

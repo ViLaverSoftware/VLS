@@ -15,16 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#pragma once
 
-#include "ExampleEventHandlerArguments.h"
-#include "ExampleEventHandlerCallbackFunctions.h"
-#include "ExampleEventHandlerUnsubscribe.h"
-#include "ExampleEventHandlerAdvanced.h"
+#include "IBookPublisher.h"
 
-int main()
+#include <iostream>
+
+class BookSubscriber : private VLS::Event::Subscriber
 {
-    ExampleEventHandlerArguments();
-    ExampleEventHandlerCallbackFunctions();
-    ExampleEventHandlerUnsubscribe();
-    ExampleEventHandlerAdvanced();
-}
+public:
+    BookSubscriber(const std::string& name) : m_name(name) {}
+
+    void SubscribeToPublications(const IBookPublisher& bookPublisher)
+    {
+        // Subscribe with a member function
+        bookPublisher.NewBookEvent().Subscribe(m_subscriber, VLS::Event::Func::Bind(this, &BookSubscriber::OnNewBookPublished));
+    }
+
+private:
+    void OnNewBookPublished(const std::string& bookName)
+    {
+        std::cout << "> Subscriber " << m_name << " recived a new book: " << bookName << std::endl;
+    }
+
+    // The subscriber class can hold event subscribtions and it will automaticly unsubscribe when dealocated.
+    VLS::Event::Subscriber m_subscriber;
+
+    std::string m_name;
+};

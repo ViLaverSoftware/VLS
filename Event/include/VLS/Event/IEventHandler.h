@@ -20,6 +20,7 @@
 #include "VLS/Event/Publisher.h"
 #include "VLS/Event/Subscriber.h"
 #include "VLS/Event/IEventLoop.h"
+#include "VLS/Event/Bind.h"
 
 #include <chrono>
 
@@ -45,13 +46,6 @@ public:
 
     /// <summary>
     /// </summary>
-    /// <param name="func"> Free function that take the event arguments. </param>
-    /// <param name="eventLoop">  </param>
-    /// <returns> </returns>
-    virtual Subscriber::UPtr Subscribe(void(*func)(Types ...), IEventLoop* eventLoop = nullptr) = 0;
-
-    /// <summary>
-    /// </summary>
     /// <param name="subscriber">  </param>
     /// <param name="func"> Lambda function that take the event arguments. </param>
     /// <param name="eventLoop">  </param>
@@ -59,22 +53,9 @@ public:
 
     /// <summary>
     /// </summary>
-    /// <param name="subscriber">  </param>
-    /// <param name="func"> Free function that take the event arguments. </param>
-    /// <param name="eventLoop">  </param>
-    virtual bool Subscribe(Subscriber& subscriber, void(*func)(Types ...), IEventLoop* eventLoop = nullptr) = 0;
-
-    /// <summary>
-    /// </summary>
     /// <param name="func"> Lambda function that take the event arguments. </param>
     /// <param name="eventLoop">  </param>
     virtual void SubscribePersistent(const std::function<void(Types ...)>& func, IEventLoop* eventLoop = nullptr) = 0;
-
-    /// <summary>
-    /// </summary>
-    /// <param name="func"> Free function that take the event arguments. </param>
-    /// <param name="eventLoop">  </param>
-    virtual void SubscribePersistent(void(*func)(Types ...), IEventLoop* eventLoop = nullptr) = 0;
 
     /// <summary>
     /// </summary>

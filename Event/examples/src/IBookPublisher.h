@@ -15,16 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#pragma once
 
-#include "ExampleEventHandlerArguments.h"
-#include "ExampleEventHandlerCallbackFunctions.h"
-#include "ExampleEventHandlerUnsubscribe.h"
-#include "ExampleEventHandlerAdvanced.h"
+#include "VLS/Event/IEventHandler.h"
 
-int main()
+#include <string>
+
+// Event handler is exposed with a reference to its interface IEventHandler.
+// The interface do therefore not have to have any members and can be mocked.
+class IBookPublisher
 {
-    ExampleEventHandlerArguments();
-    ExampleEventHandlerCallbackFunctions();
-    ExampleEventHandlerUnsubscribe();
-    ExampleEventHandlerAdvanced();
-}
+public:
+    virtual ~IBookPublisher() = default;
+
+    virtual VLS::Event::IEventHandler<std::string>& NewBookEvent() const = 0;
+};
+
