@@ -24,66 +24,75 @@ namespace VLS::Event {
 class Subscriber;
 
 /// <summary>
-/// The publisher provide functionality to connect with subscribers. Both will break the 
-/// connection by unsubscribing when destructed.
-/// Implementation of this abstract class must implement a Subscribe() function that
-/// registrates the subscription with a pointer reference to an new Subscriber class.
-/// New subscriber classes can be created with :
-/// SubscriptionHandler::Unsubscriber::Create(...)
-/// It must also implement the pure virtual function SubscriptionHandler::Unsubscribe(...)
-/// it will receive a pointer to the Unsubscriber class that was return by the Subscribe
-/// class.It must then unsubscribe the subscription.
+/// The publisher provide functionality to connect with subscribers. 
 /// </summary>
+/// <remarks>
+/// Both subscriber and publisher will break the connection by unsubscribing when destructed.
+/// Implementation of this abstract class must implement a Subscribe() function that
+/// registrars the subscription with a pointer reference to an new Subscriber class.
+/// It must also implement the pure virtual function OnUnsubscribe(Subscriber *subscriber)
+/// it will receive a pointer to the subscriber class that unsubscribed.
+/// </remarks>
 class Publisher {
 
 public:
 
-    /// <summary>
-    /// 
-    /// </summary>
-    Publisher(const Publisher&) = delete;
     Publisher() = default;
 
     /// <summary>
-    /// 
+     /// Copy constructor is not available because it will break the unsubscribe functionality
+     /// </summary>
+    Publisher(const Publisher&) = delete;
+
+    /// <summary>
+    /// All references to the object in referenced subscribers will be removed. 
     /// </summary>
-    /// <param name="">  </param>
-    /// <returns>  </returns>
     virtual ~Publisher();
 
 protected:
     /// <summary>
-    /// 
+    /// Add a reference to the subscriber
     /// </summary>
-    /// <param name="">  </param>
-    /// <returns>  </returns>
+    /// <remarks>
+    /// The reference is used to unsubscribe when the object is deallocated.
+    /// Only holds one reference to each subscriber.
+    /// </remarks>
+    /// <param name="subscriber"> Subscriber object that is subscribing. </param>
+    /// <returns> True if new subscriber reference is added. </returns>
     bool Subscribe(Subscriber& subscriber);
 
     /// <summary>
-    /// 
+    /// Pure virtual function called when an subscriber is unsubscribed.
     /// </summary>
-    /// <param name="">  </param>
+    /// <remarks>
+    /// It is not triggered when a subscriber is unsubscribed during the deconstruction of
+    /// the Publisher.
+    /// </remarks>
+    /// <param name="subscriber"> Pointer to the subscriber object. </param>
     virtual void OnUnsubscribe(Subscriber *subscriber) = 0;
 
 private:
     /// <summary>
-    /// 
+    /// Removes a subscriber reference.
     /// </summary>
-    /// <param name="">  </param>
-    /// <returns>  </returns>
+    /// <remarks>
+    /// Calls the virtual OnUnsubsribe functions if reference exists and notify is true.
+    /// </remarks>
+    /// <param name="subscriber"> Object that will be unsubscribed. </param>
+    /// <param name="notify"> OnUnsubscribe will only be called if true. </param>
+    /// <returns> True if unsubscribe was successful. </returns>
     bool _unsubscribe(Subscriber* subscriber, bool notify = true);
 
     /// <summary>
-    /// 
+    /// Unsubscribe all referenced objects.
     /// </summary>
-    /// <param name="">  </param>
-    /// <returns>  </returns>
+    /// <param name="notify"> OnUnsubscribe will only be called if true. </param>
     void _upsubscribeAll(bool notify = true);
 
 
 private:
     /// <summary>
-    /// 
+    /// List of subscribers with a subscription.
     /// </summary>
     std::vector<Subscriber*> m_subscribers;
 

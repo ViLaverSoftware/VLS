@@ -299,3 +299,21 @@ TEST(VLSEventHandler7, Success1) {
     eventHandler.Trigger(6, 6, 6, 6, 6, 6, 6);
     EXPECT_EQ(value, 42);
 }
+
+TEST(VLSEventHandlerGeneral, UnsubscribeDuringCallback) {
+    Event::EventHandler<> eventHandler;
+    Event::Subscriber subscriber;
+    int value = 0;
+    eventHandler.Subscribe(subscriber, [&value, &subscriber](){
+        value+=42;
+        subscriber.UnsubscribeAll();
+    });
+    // State before triggering the event
+    EXPECT_EQ(value, 0);
+    EXPECT_EQ(subscriber.PublisherCount(), 1);
+
+    // Triggere the call back function that unsubscribe from the event
+    eventHandler.Trigger();
+    EXPECT_EQ(value, 42);
+    EXPECT_EQ(subscriber.PublisherCount(), 0);
+}

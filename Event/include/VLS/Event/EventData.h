@@ -25,11 +25,13 @@
 namespace VLS::Event {
 
 /// <summary>
-/// This data structure is used internaly in the EventHandler to store data related to a single event subscription.
+/// This data structure is used internally in the EventHandler to store data related to a single event subscription.
+/// </summary>
+/// <remarks>
 /// 1. Optional Subscriber used to unsubscribe to the event.
 /// 2. Callable function with the arguments of the variadic template.
 /// 3. Optional event loop. If specified the event will be Enqueued to the event loop when triggered. 
-/// </summary>
+/// </remarks>
 template<typename ... Types>
 struct EventData {
     /// <summary>
@@ -39,24 +41,30 @@ struct EventData {
         : subscriber(s), func(f), eventLoop(e) {}
 
     /// <summary>
+    /// The subscriber can unsubscribe from the event and will automatically do so if it is deallocated.
+    /// </summary>
+    /// <remarks>
     /// The subscriber is optional. 
     /// If no set the subscription to the event is persistent.
-    /// The subscriber can unsubscribe the event and will automaticly do so if it is dealocated.
-    /// </summary>
+    /// </remarks>
     Subscriber* subscriber;
 
     /// <summary>
-    /// When the event is triggered the callable func is the function that will be called. 
-    /// The arguments used to call the function is the arguments used to trigger the event. 
+    /// The function will be called when the event is triggered.
     /// </summary>
+    /// <remarks>
+    /// The arguments used to call the function is the arguments used to trigger the event. 
+    /// </remarks>
     std::function<void(Types ...)> func;
 
     /// <summary>
-    /// The event loop is optional.
-    /// If not set the callable function will be called directly on the same thread as the event is triggered.
-    /// The callable function will be packed in a callable void(void) function is nessary and enqueued on the 
+    /// The callable function will be packed in a callable void(void) function if necessary and enqueued on the 
     /// event loop when the event is triggered.
     /// </summary>
+    /// <remarks>
+    /// The event loop is optional.
+    /// If not set the callable function will be called directly on the same thread as the event is triggered.
+    /// </remarks>
     IEventLoop* eventLoop;
 };
 

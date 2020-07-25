@@ -21,6 +21,7 @@ namespace VLS::Event {
 
 std::map<std::thread::id, std::string> EventLoop::s_threadNameMap;
 std::string EventLoop::s_defaultThreadName = "Noname";
+std::mutex EventLoop::s_threadNameMutex;
 
 EventLoop::EventLoop()
     : m_run(false)
@@ -46,7 +47,9 @@ bool EventLoop::Start(const std::string& name)
 
     // Add thread name to map
     if (!name.empty()) {
+        s_threadNameMutex.lock();
         s_threadNameMap[m_thread.get_id()] = name;
+        s_threadNameMutex.unlock();
     }
     return true;
 }
@@ -65,16 +68,29 @@ bool EventLoop::Stop()
     }
     
     // Remove thread name from map
+    s_threadNameMutex.lock();
     auto it = s_threadNameMap.find(threadId);
     if (it != s_threadNameMap.end()) {
         s_threadNameMap.erase(it);
     }
+    s_threadNameMutex.unlock();
     
     return true;
 }
 
+bool EventLoop::IsRunning() const
+{
+    return m_run;
+}
+
+size_t EventLoop::WaitingCount() const
+{
+    return m_eventQueue.WaitingCount();
+}
+
 const std::string& EventLoop::ThreadName()
 {
+    std::lock_guard<std::mutex> guard(s_threadNameMutex);
     auto it = s_threadNameMap.find(std::this_thread::get_id());
     if (it != s_threadNameMap.end()) {
         return it->second;

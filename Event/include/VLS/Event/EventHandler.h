@@ -26,22 +26,22 @@
 #include "VLS/Event/Publisher.h"
 #include "VLS/Event/EventData.h"
 
-// Multiple subscriptions are allowed for each subscriber as default but can be changed
+// Multiple subscriptions are allowed for each subscriber pr publisher as default but can be changed
 // with this flag
 //#define VLS_EVENT_ONE_SUBSCRIPTION_PER_SUBSCRIBER
 
 namespace VLS::Event {
 
 /// <summary> 
-/// Manages subscriptions to, and triggers events, with arguments matching 
-/// the variadic temple of the class. 
+/// Handles events by providing the possibility to subscribe to and trigger an event, with arguments 
+/// matching the variadic temple of the class. 
 /// </summary>
 /// <remarks>
-/// Subscriptions can be persisten(no unsubscribe option) or be handled by a subscriber. 
+/// Subscriptions can be persistent(no unsubscribe option) or be handled by a subscriber. 
 /// If an reference to a subscriber object is provided it will be used, otherwise a unique 
 /// point to a subscriber object will be returned.
 /// The subscriber provides functions that can be used to unsubscribe to the event.
-/// The subscriber will unsubscribe any existing subscription automaticly if dealocated. 
+/// The subscriber will unsubscribe any existing subscription automatically if deallocated. 
 /// 
 /// When subscribing to an event, a function needs to be provided with a matching set of 
 /// arguments. The function can be a callable std::function<void(...)> (lambda) or a free 
@@ -53,7 +53,11 @@ namespace VLS::Event {
 /// function directly, it will be packed into a void(void) lambda function with all the function 
 /// arguments and enqueued on the event loop.
 /// 
-/// Warning: Propper care should be taking with function argument to make sure they are still 
+/// Value, const reference and pointer argument types are supported. Reference arguments are not.
+/// Const reference and value arguments types needs a copy constructor. If a class with no copy 
+/// constructor needs to be return in an event callback a pointer can be used.
+/// 
+/// Warning: Proper care should be taking with function argument to make sure they are still 
 /// in scope when the event loop gets around to calling the enqueued function. 
 /// </remarks>
 template<typename ... Types>
@@ -69,9 +73,13 @@ public:
 
     /// <summary>
     /// Subscribes to the event by providing a callable that will be called when the event is triggered. 
-    /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
-    /// The returned subscriber object can unsubscribe and will automaticly unsubscribe if deconstructed.
     /// </summary>
+    /// <remarks>
+    /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
+    /// The returned subscriber object can unsubscribe and will automatically unsubscribe if deconstructed.
+    /// Warning: If the returned subscriber is not received unsubscribe will be triggered immediately after
+    /// the subscription.
+    /// </remarks>
     /// <param name="func"> Callable that will be called when the event is triggered. </param>
     /// <param name="eventLoop"> Optional thread where the callable will be called if provided. </param>
     /// <returns> Unique pointer to subscribe object with a subscription to this event. </returns>
@@ -84,10 +92,12 @@ public:
     }
 
     /// <summary>
-    /// Subscribes to the event by providing a callable that will be called when the event is triggered. 
-    /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
-    /// The subscriber will receive a subscription so it can unsubscribe and will automaticly unsubscribe if deconstructed.
+    /// Subscribes to the event by providing a callable that will be called when the event is triggered.
     /// </summary>
+    /// <remarks>
+    /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
+    /// The subscriber will receive a subscription so it can unsubscribe and will automatically unsubscribe if deconstructed.
+    /// </remarks>
     /// <param name="subscriber"> The subscriber will receive a subscription to the event so it can unsubscribe to the event. </param>
     /// <param name="func"> Callable that will be called when the event is triggered. </param>
     /// <param name="eventLoop"> Optional thread where the callable will be called if provided. </param>
@@ -115,10 +125,12 @@ public:
     }
 
     /// <summary>
-    /// Subscribes to the event by providing a callable that will be called when the event is triggered. 
+    /// Subscribes to the event by providing a callable that will be called when the event is triggered.
+    /// </summary>
+    /// <remarks>
     /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
     /// It is not possible to unsubscribe when the persistent version of the subscribe function is used.
-    /// </summary>
+    /// </remarks>
     /// <param name="func"> Callable that will be called when the event is triggered. </param>
     /// <param name="eventLoop"> Optional thread where the callable will be called if provided. </param>
     void SubscribePersistent(const std::function<void(Types ...)>& func, IEventLoop* eventLoop = nullptr) override
@@ -128,33 +140,15 @@ public:
     }
 
     /// <summary>
-    /// Wait for the event to trigger and return the parameters as a tuple
-    /// </summary>
-    /// <param name="timeout"> The maximum time to wait. </param>
-    /// <returns> Tuple containing all the parameters used to trigger the event. </returns>
-    std::shared_ptr<std::tuple<Types ...>> Wait(std::chrono::milliseconds timeout = std::chrono::minutes(1)) override
-    {
-        std::promise<std::tuple<Types ...>> promise;
-        auto u = Subscribe([&promise](Types ... args) {
-            promise.set_value(std::make_tuple(args ...));
-        });
-        std::future<std::tuple<Types ...>> future = promise.get_future();
-        if (future.wait_for(timeout) == std::future_status::ready) {
-            return std::make_shared<std::tuple<Types ...>>(future.get());
-        }
-        else {
-            return std::shared_ptr<std::tuple<Types ...>>();
-        }
-    }
-
-    /// <summary>
     /// Triggers the event by calling all the callables subscribed to the event.
-    /// The event parameters match the template arguments of the class. 
     /// </summary>
+    /// <remarks>
+    /// The event parameters match the template arguments of the class.
+    /// </remarks>
     /// <param name="args"> The parameters used to trigger the callables. </param>
     virtual void Trigger(Types ... args)
     {
-        // Subscriber data is copied to avoid having the mutex locked when event funtions are called.
+        // Subscriber data is copied to avoid having the mutex locked when event functions are called.
         // This will prevent a potential deadlocked if subscribers unsubscribe or triggers the same event during event triggered code.
         std::vector<std::pair<std::function<void(Types ...)>, IEventLoop*>> functionList;
         m_mutex.lock();
@@ -186,9 +180,11 @@ public:
 
 protected:
     /// <summary>
-    /// This function will be triggered by the publisher base after a subscriber has unsubscribed.
-    /// It will remove the subscriber and the callable from the list that will be called when the event is triggered.
+    /// Removes the subscriber and related data.
     /// </summary>
+    /// <remarks>
+    /// This function will be triggered by the publisher base after a subscriber has unsubscribed.
+    /// </remarks>
     /// <param name="subscriber"> Subscriber that will be removed. </param>
     void OnUnsubscribe(Subscriber* subscriber) override
     {
@@ -208,11 +204,13 @@ protected:
 
     /// <summary>
     /// List of subscribed callables.
+    /// </summary>
+    /// <remarks>
     /// Each item have:
     /// - Required callable with arguments that match the template arguments.
     /// - Optional subscriber that can be used to unsubscribe to the event.
     /// - Optional event loop where the function will be called if provided.
-    /// </summary>
+    /// </remarks>
     std::vector<std::unique_ptr<EventData<Types ...>>> m_functionList;
 };
 

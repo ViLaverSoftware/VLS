@@ -27,41 +27,53 @@
 namespace VLS::Event {
 
 /// <summary>
-/// 
+/// Interface class that contains the functions that can be used to subscribe to EventHandler events.
 /// </summary>
+/// <remarks>
+/// The interface makes it possible to expose subscriptions functions without exposing the trigger function.
+/// It also make it possible for classes that has events to have interfaces without needed to implement the 
+/// event in the interface.
+/// Having an interface for the EventHandler also makes it easy to mock it. 
+/// </remarks>
 template<typename ... Types>
 class IEventHandler {
 public:
-    /// <summary> 
-    /// Subscribes to triggered events.
-    /// The lambda function argument will be called when the event is triggered. The arguments 
-    /// used to trigger the event will be passed on to the lambda function.
-    /// An unique pointer to a subcriber is return. The subscriber can be used to unsubscribe 
-    /// to events, and it will automaticly unsubscribe when the subscriber is descructed. 
+    /// <summary>
+    /// Subscribes to the event by providing a callable that will be called when the event is triggered. 
     /// </summary>
-    /// <param name="func"> Lambda function that take the event arguments. </param>
-    /// <param name="eventLoop">  </param>
-    /// <returns> </returns>
+    /// <remarks>
+    /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
+    /// The returned subscriber object can unsubscribe and will automatically unsubscribe if deconstructed.
+    /// Warning: If the returned subscriber is not received unsubscribe will be triggered immediately after
+    /// the subscription.
+    /// </remarks>
+    /// <param name="func"> Callable that will be called when the event is triggered. </param>
+    /// <param name="eventLoop"> Optional thread where the callable will be called if provided. </param>
+    /// <returns> Unique pointer to subscribe object with a subscription to this event. </returns>
     virtual Subscriber::UPtr Subscribe(const std::function<void(Types ...)>& func, IEventLoop* eventLoop = nullptr) = 0;
 
     /// <summary>
+    /// Subscribes to the event by providing a callable that will be called when the event is triggered.
     /// </summary>
-    /// <param name="subscriber">  </param>
-    /// <param name="func"> Lambda function that take the event arguments. </param>
-    /// <param name="eventLoop">  </param>
+    /// <remarks>
+    /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
+    /// The subscriber will receive a subscription so it can unsubscribe and will automatically unsubscribe if deconstructed.
+    /// </remarks>
+    /// <param name="subscriber"> The subscriber will receive a subscription to the event so it can unsubscribe to the event. </param>
+    /// <param name="func"> Callable that will be called when the event is triggered. </param>
+    /// <param name="eventLoop"> Optional thread where the callable will be called if provided. </param>
     virtual bool Subscribe(Subscriber& subscriber, const std::function<void(Types ...)>& func, IEventLoop *eventLoop = nullptr) = 0;
 
     /// <summary>
+    /// Subscribes to the event by providing a callable that will be called when the event is triggered.
     /// </summary>
-    /// <param name="func"> Lambda function that take the event arguments. </param>
-    /// <param name="eventLoop">  </param>
+    /// <remarks>
+    /// The callable will be enqueued to the event loop when the event is triggered if an event loop is provided.
+    /// It is not possible to unsubscribe when the persistent version of the subscribe function is used.
+    /// </remarks>
+    /// <param name="func"> Callable that will be called when the event is triggered. </param>
+    /// <param name="eventLoop"> Optional thread where the callable will be called if provided. </param>
     virtual void SubscribePersistent(const std::function<void(Types ...)>& func, IEventLoop* eventLoop = nullptr) = 0;
-
-    /// <summary>
-    /// </summary>
-    /// <param name="timeout">  </param>
-    /// <returns> </returns>
-    virtual std::shared_ptr<std::tuple<Types ...>> Wait(std::chrono::milliseconds timeout = std::chrono::minutes(1)) = 0;
 };
 
 }

@@ -23,29 +23,28 @@
 namespace VLS::Event {
 
 /// <summary>
-/// A threadsafe queue
+/// A thread safe queue.
+/// <remarks>
 /// The thread-safe queue is used by the async Event::HandlerAsync to transfer
-/// event arguments from the trigger thread to a seperate worker thread
+/// callables from the trigger thread to a separate event loop thread.
+/// </remarks>
 /// </summary>
 template <class T>
 class SafeQueue
 {
 public:
 
-    /// <summary>
-    /// 
-    /// </summary>
     SafeQueue() = default;
 
     /// <summary>
-    /// 
+    /// Queue can not be copied.
     /// </summary>
     SafeQueue(const SafeQueue&) = delete;
 
     /// <summary>
-    /// Add a element to the queue
+    /// Add a element to the queue.
     /// </summary>
-    /// <param name="value"> Queue element </param>
+    /// <param name="value"> Queue element. </param>
     void Enqueue(T value)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -56,13 +55,13 @@ public:
     /// <summary>
     /// Get the front element of the queue. Wait if the queue is empty.
     /// </summary>
-    /// <returns> Front element of the queue </returns>
+    /// <returns> Front element of the queue. </returns>
     T Dequeue()
     {
         std::unique_lock<std::mutex> lock(m_mutex);
         while (m_queue.empty())
         {
-            // release lock as long as the wait and reaquire it afterwards.
+            // release lock as long as the wait and reacquire it afterwards.
             m_conVar.wait(lock);
         }
         T value = m_queue.front();
@@ -70,19 +69,28 @@ public:
         return value;
     }
 
+    /// <summary>
+    /// Returns the number of elements on the queue.
+    /// </summary>
+    /// <returns> Number of elements on the queue. </returns>
+    size_t WaitingCount() const 
+    {
+        return m_queue.size();
+    }
+
 private:
     /// <summary>
-    /// 
+    /// Queue with elements.
     /// </summary>
     std::queue<T> m_queue;
 
     /// <summary>
-    /// 
+    /// Mutex used to protect the queue.
     /// </summary>
     std::mutex m_mutex;
 
     /// <summary>
-    /// 
+    ///  Used to wait for new elements.
     /// </summary>
     std::condition_variable m_conVar;
 };

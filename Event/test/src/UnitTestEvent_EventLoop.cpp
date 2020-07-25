@@ -35,3 +35,7 @@ TEST(VLSEventLoop, Contructor) {
     eventLoop.Stop();
     EXPECT_TRUE(value);
 }
+
+TEST(VKSEventLoop, Test) {
+    VLS::Event::EventLoop eventLoop;
+}

@@ -47,7 +47,7 @@ bool Publisher::_unsubscribe(Subscriber *subscriber, bool notify)
     if (it == m_subscribers.end()) { return false; }
     m_subscribers.erase(it);
 
-    // Remove the publisher from the subsriber
+    // Remove the publisher from the subscriber
     bool result = subscriber->_unsubsribe(this);
     assert(result);
 
