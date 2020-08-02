@@ -1,6 +1,6 @@
 # Event Module {#event}
 
-Events are the backbone of GUI appliactions but they are also very usefull in other application where you want seperation of conserns.
+Events are the backbone of GUI applications but they are also very useful in other application where you want separation of concerns.
 
 This module provide an EventHandler templated class where it is possible to subscribe and trigger events.
 
@@ -10,7 +10,7 @@ This module provide an EventHandler templated class where it is possible to subs
  * Multiple subscribers
  * Smart unsubscription
  * Interface for dependency injection and mock support
- * Qued function callbacks
+ * Queued function callbacks
 
 for more information see the [home page](http://www.vilaversoftware.dk/#/eventModule)
 

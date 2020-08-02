@@ -1,20 +1,40 @@
 ﻿# VLS Libray {#vls}
-The VLS Library is an open source C++ software library created by ViLaverSoftware IVS.
+Version 1.0.0
+
+The VLS Library is an open source C++ software library created by ViLaverSoftware.
 
 For more than 12 years I have been developing C++ software and have used lots of great open source libraries. 
-Working on VLS Library is my way of trying to give something usefull back to the comunity.
-I will do my very best to provide software of the heighest quality so all bug reports, improvement suggestions or comments are very wellcome. 
+Working on VLS Library is my way of trying to give something useful back to the community.
+I will do my very best to provide software of the highest quality so all bug reports, improvement suggestions or comments are very welcome. 
+
 
 ## Official Homepage
 *http://www.vilaversoftware.dk*
 
-Contains getting started guide, descriptions and reference documentation.
+Contains getting started guide, descriptions and examples.
 
 
 ## Modules
 VLS Library currently contains a single module but more modules are planned. 
 
  * [Event Module](@ref event)
+
+ ## Platforms
+ The VLS Library only use the standard library and do not include any system headers.
+
+ It should therefore be platform independent but have only been tested on windows. 
+
+
+ ## Requirements
+ The goal is to keep dependencies as low as possible.
+
+ Library dependencies:
+ - CMake
+ - C++17
+
+ Test additional dependencies:
+  - Conan package manager
+  - GTest
 
 
 ## License

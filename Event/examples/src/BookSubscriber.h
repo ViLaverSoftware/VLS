@@ -35,10 +35,10 @@ public:
 private:
     void OnNewBookPublished(const std::string& bookName)
     {
-        std::cout << "> Subscriber " << m_name << " recived a new book: " << bookName << std::endl;
+        std::cout << "> Subscriber " << m_name << " received a new book: " << bookName << std::endl;
     }
 
-    // The subscriber class can hold event subscribtions and it will automaticly unsubscribe when dealocated.
+    // The subscriber class can hold event subscriptions and it will automatically unsubscribe when deallocated.
     VLS::Event::Subscriber m_subscriber;
 
     std::string m_name;
