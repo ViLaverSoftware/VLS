@@ -29,7 +29,7 @@ void ExampleEventHandlerArguments()
     // Create a event handler with two event arguments
     VLS::Event::EventHandler<std::string, int> valueChanged;
 
-    // Subscribe to the event with a lambda function without an unsubscibe option
+    // Subscribe to the event with a lambda function without an unsubscribe option
     valueChanged.SubscribePersistent([](const std::string& text, int number){ 
         cout << text << " (" << number << ")" << endl; 
     });

@@ -9,8 +9,8 @@ This module provide an EventHandler templated class where it is possible to subs
  * Subscribe with free, member and lambda callback function
  * Multiple subscribers
  * Smart unsubscription
- * Interface for dependency injection and mock support
- * Queued function callbacks
+ * Interface for dependency injection and mock testing support
+ * Add callback function execution to event loop
 
 for more information see the [home page](http://www.vilaversoftware.dk/#/eventModule)
 
