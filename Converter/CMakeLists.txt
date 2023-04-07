@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.12)
 
-project(VLSEvent VERSION 1.0.0)
+project(VLSConverter VERSION 1.0.0)
 
 add_library(${PROJECT_NAME})
 
@@ -13,7 +13,12 @@ target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
 file(GLOB_RECURSE SOURCE_HEADERS src/*.h)
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_HEADERS})
 
-target_include_directories(${PROJECT_NAME} PUBLIC include/ PRIVATE src/)
+target_link_libraries(${PROJECT_NAME}
+    VLSLog)
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC include
+    PRIVATE src)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 

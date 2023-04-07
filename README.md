@@ -30,11 +30,29 @@ VLS Library currently contains a single module but more modules are planned.
 
  Library dependencies:
  - CMake
- - C++17
+ - C++20
 
  Test additional dependencies:
   - Conan package manager
   - GTest
+  
+## Conan package manager
+Install python3:
+ - https://www.python.org/downloads/
+
+Install Conan using pip:
+ - Open command prompt
+ - pip install conan
+ 
+Create conan profile:
+ - conan profile detect --force
+ 
+Edit conan profile:
+ - ~/.conan2/profiles/default
+
+Find conan package:
+- https://conan.io/center/
+
 
 
 ## License
