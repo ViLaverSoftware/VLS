@@ -23,87 +23,73 @@ std::map<std::thread::id, std::string> EventLoop::s_threadNameMap;
 std::string EventLoop::s_defaultThreadName = "Noname";
 std::mutex EventLoop::s_threadNameMutex;
 
-EventLoop::EventLoop()
-    : m_run(false)
-{
+EventLoop::EventLoop() : m_run(false) {}
 
+EventLoop::~EventLoop() { Stop(); }
+
+void EventLoop::Enqueue(const std::function<void(void)>& func) {
+  m_eventQueue.Enqueue(func);
 }
 
-EventLoop::~EventLoop()
-{
-    Stop();
-}
+bool EventLoop::Start(const std::string& name) {
+  if (m_run) {
+    return false;
+  }
+  m_run = true;
+  m_thread = std::thread(&EventLoop::_run, this);
 
-void EventLoop::Enqueue(const std::function<void(void)>& func)
-{
-    m_eventQueue.Enqueue(func);
-}
-
-bool EventLoop::Start(const std::string& name)
-{
-    if (m_run) { return false; }
-    m_run = true;
-    m_thread = std::thread(&EventLoop::_run, this);
-
-    // Add thread name to map
-    if (!name.empty()) {
-        s_threadNameMutex.lock();
-        s_threadNameMap[m_thread.get_id()] = name;
-        s_threadNameMutex.unlock();
-    }
-    return true;
-}
-
-bool EventLoop::Stop()
-{
-    if (!m_run) { return false; }
-    auto threadId = m_thread.get_id();
-    m_run = false;
-
-    // Wake up thread
-    m_eventQueue.Enqueue([](){});
-
-    if (m_thread.joinable()) {
-        m_thread.join();
-    }
-    
-    // Remove thread name from map
+  // Add thread name to map
+  if (!name.empty()) {
     s_threadNameMutex.lock();
-    auto it = s_threadNameMap.find(threadId);
-    if (it != s_threadNameMap.end()) {
-        s_threadNameMap.erase(it);
-    }
+    s_threadNameMap[m_thread.get_id()] = name;
     s_threadNameMutex.unlock();
-    
-    return true;
+  }
+  return true;
 }
 
-bool EventLoop::IsRunning() const
-{
-    return m_run;
+bool EventLoop::Stop() {
+  if (!m_run) {
+    return false;
+  }
+  auto threadId = m_thread.get_id();
+  m_run = false;
+
+  // Wake up thread
+  m_eventQueue.Enqueue([]() {});
+
+  if (m_thread.joinable()) {
+    m_thread.join();
+  }
+
+  // Remove thread name from map
+  s_threadNameMutex.lock();
+  auto it = s_threadNameMap.find(threadId);
+  if (it != s_threadNameMap.end()) {
+    s_threadNameMap.erase(it);
+  }
+  s_threadNameMutex.unlock();
+
+  return true;
 }
 
-size_t EventLoop::WaitingCount() const
-{
-    return m_eventQueue.WaitingCount();
+bool EventLoop::IsRunning() const { return m_run; }
+
+size_t EventLoop::WaitingCount() const { return m_eventQueue.WaitingCount(); }
+
+const std::string& EventLoop::ThreadName() {
+  std::lock_guard<std::mutex> guard(s_threadNameMutex);
+  auto it = s_threadNameMap.find(std::this_thread::get_id());
+  if (it != s_threadNameMap.end()) {
+    return it->second;
+  }
+  return s_defaultThreadName;
 }
 
-const std::string& EventLoop::ThreadName()
-{
-    std::lock_guard<std::mutex> guard(s_threadNameMutex);
-    auto it = s_threadNameMap.find(std::this_thread::get_id());
-    if (it != s_threadNameMap.end()) {
-        return it->second;
-    }
-    return s_defaultThreadName;
+void EventLoop::_run() {
+  do {
+    auto func = m_eventQueue.Dequeue();
+    func();
+  } while (m_run);
 }
 
-void EventLoop::_run()
-{
-    do {
-        auto func = m_eventQueue.Dequeue();
-        func();
-    } while (m_run);
-}
-
-}
+}  // namespace VLS::Event

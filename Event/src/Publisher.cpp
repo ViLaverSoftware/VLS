@@ -17,53 +17,49 @@
  */
 #include "VLS/Event/Publisher.h"
 
-#include "VLS/Event/Subscriber.h"
-
 #include <assert.h>
+
+#include "VLS/Event/Subscriber.h"
 
 namespace VLS::Event {
 
+Publisher::~Publisher() { _upsubscribeAll(false); }
 
-Publisher::~Publisher()
-{
-    _upsubscribeAll(false);
-}
-
-bool Publisher::Subscribe(Subscriber& subscriber)
-{
-    auto it = std::find(m_subscribers.begin(), m_subscribers.end(), &subscriber);
-    if (it != m_subscribers.end()) { return false; }
-    if (subscriber._subscribe(this)) {
-        m_subscribers.push_back(&subscriber);
-        return true;
-    }
+bool Publisher::Subscribe(Subscriber& subscriber) {
+  auto it = std::find(m_subscribers.begin(), m_subscribers.end(), &subscriber);
+  if (it != m_subscribers.end()) {
     return false;
+  }
+  if (subscriber._subscribe(this)) {
+    m_subscribers.push_back(&subscriber);
+    return true;
+  }
+  return false;
 }
 
-bool Publisher::_unsubscribe(Subscriber *subscriber, bool notify)
-{
-    assert(subscriber != nullptr);
-    auto it = std::find(m_subscribers.begin(), m_subscribers.end(), subscriber);
-    if (it == m_subscribers.end()) { return false; }
-    m_subscribers.erase(it);
+bool Publisher::_unsubscribe(Subscriber* subscriber, bool notify) {
+  assert(subscriber != nullptr);
+  auto it = std::find(m_subscribers.begin(), m_subscribers.end(), subscriber);
+  if (it == m_subscribers.end()) {
+    return false;
+  }
+  m_subscribers.erase(it);
 
-    // Remove the publisher from the subscriber
-    bool result = subscriber->_unsubsribe(this);
-    assert(result);
+  // Remove the publisher from the subscriber
+  bool result = subscriber->_unsubsribe(this);
+  assert(result);
 
-    if (notify) {
-        OnUnsubscribe(subscriber);
-    }
+  if (notify) {
+    OnUnsubscribe(subscriber);
+  }
 
-    return result;
+  return result;
 }
 
-void Publisher::_upsubscribeAll(bool notify)
-{
-    while (m_subscribers.size() > 0)
-    {
-        _unsubscribe(m_subscribers.back(), notify);
-    }
+void Publisher::_upsubscribeAll(bool notify) {
+  while (m_subscribers.size() > 0) {
+    _unsubscribe(m_subscribers.back(), notify);
+  }
 }
 
-}
+}  // namespace VLS::Event

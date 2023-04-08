@@ -22,29 +22,29 @@
 
 using namespace std;
 
-void ExampleEventHandlerAdvanced()
-{
-    cout << "Example EventHandler Advanced" << endl;
+void ExampleEventHandlerAdvanced() {
+  cout << "Example EventHandler Advanced" << endl;
 
-    // Create a publisher with an event handler for new books
-    BookPublisher publisher;
+  // Create a publisher with an event handler for new books
+  BookPublisher publisher;
 
-    // Create book subscribers
-    auto subscriberA = make_unique<BookSubscriber>("A");
-    auto subscriberB = make_unique<BookSubscriber>("B");
+  // Create book subscribers
+  auto subscriberA = make_unique<BookSubscriber>("A");
+  auto subscriberB = make_unique<BookSubscriber>("B");
 
-    // Subscribe to new publications
-    subscriberA->SubscribeToPublications(publisher);
-    subscriberB->SubscribeToPublications(publisher);
+  // Subscribe to new publications
+  subscriberA->SubscribeToPublications(publisher);
+  subscriberB->SubscribeToPublications(publisher);
 
-    cout << "> First book is published" << endl;
-    publisher.AddBook("First book");
+  cout << "> First book is published" << endl;
+  publisher.AddBook("First book");
 
-    // SubscriberA is removed and automaticly unsubscribes because the VLS::Event::Subscriber object is dealocated
-    subscriberA.reset();
+  // SubscriberA is removed and automaticly unsubscribes because the
+  // VLS::Event::Subscriber object is dealocated
+  subscriberA.reset();
 
-    cout << "> Second book is published" << endl;
-    publisher.AddBook("Second book");
+  cout << "> Second book is published" << endl;
+  publisher.AddBook("Second book");
 
-    cout << endl;
+  cout << endl;
 }

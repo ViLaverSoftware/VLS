@@ -27,12 +27,15 @@
 
 namespace VLS::Log {
 class LogSinkMock : public LogSink {
-public:
-    MOCK_METHOD( std::string, name, (), (const, override) );
+ public:
+  MOCK_METHOD(std::string, name, (), (const, override));
 #ifdef __cpp_lib_source_location
-  MOCK_METHOD( void, privateLog, (LogLevel, const std::string&, const std::source_location), ( const, override) );
+  MOCK_METHOD(void, privateLog,
+              (LogLevel, const std::string&, const std::source_location),
+              (const, override));
 #else
-  MOCK_METHOD( void, privateLog, (LogLevel, const std::string&), ( const, override) );
+  MOCK_METHOD(void, privateLog, (LogLevel, const std::string&),
+              (const, override));
 #endif
 };
-}
+}  // namespace VLS::Log

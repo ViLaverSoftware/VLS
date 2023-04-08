@@ -17,17 +17,15 @@
  */
 #pragma once
 
-#include "VLS/Event/IEventHandler.h"
-
 #include <string>
+
+#include "VLS/Event/IEventHandler.h"
 
 // Event handler is exposed with a reference to its interface IEventHandler.
 // The interface do therefore not have to have any members and can be mocked.
-class IBookPublisher
-{
-public:
-    virtual ~IBookPublisher() = default;
+class IBookPublisher {
+ public:
+  virtual ~IBookPublisher() = default;
 
-    virtual VLS::Event::IEventHandler<std::string>& NewBookEvent() const = 0;
+  virtual VLS::Event::IEventHandler<std::string>& NewBookEvent() const = 0;
 };
-

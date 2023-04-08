@@ -16,15 +16,14 @@
  * limitations under the License.
  */
 
+#include "ExampleEventHandlerAdvanced.h"
 #include "ExampleEventHandlerArguments.h"
 #include "ExampleEventHandlerCallbackFunctions.h"
 #include "ExampleEventHandlerUnsubscribe.h"
-#include "ExampleEventHandlerAdvanced.h"
 
-int main()
-{
-    ExampleEventHandlerArguments();
-    ExampleEventHandlerCallbackFunctions();
-    ExampleEventHandlerUnsubscribe();
-    ExampleEventHandlerAdvanced();
+int main() {
+  ExampleEventHandlerArguments();
+  ExampleEventHandlerCallbackFunctions();
+  ExampleEventHandlerUnsubscribe();
+  ExampleEventHandlerAdvanced();
 }

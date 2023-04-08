@@ -17,17 +17,13 @@
  */
 #include <VLS/Converter/ValueConverter.h>
 
-namespace VLS::Converter
-{
-bool ValueConverter::set(const char *value, const char *properties) noexcept
-{
-    std::string strValue(value);
-    return m_converter->convert(typeid(std::string), &strValue, m_valueTypeInfo, m_valuePtr, properties);
+namespace VLS::Converter {
+bool ValueConverter::set(const char *value, const char *properties) noexcept {
+  std::string strValue(value);
+  return m_converter->convert(typeid(std::string), &strValue, m_valueTypeInfo,
+                              m_valuePtr, properties);
 }
 
-const type_info &ValueConverter::type() const
-{
-    return m_valueTypeInfo;
-}
+const type_info &ValueConverter::type() const { return m_valueTypeInfo; }
 
-}
+}  // namespace VLS::Converter

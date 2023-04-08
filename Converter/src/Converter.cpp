@@ -22,30 +22,34 @@ using namespace VLS;
 
 namespace VLS::Converter {
 
-bool Converter::convert(const type_info &sourceType, const void *sourceValue, const type_info &targetType, void *targetValue, const char *properties) const noexcept
-{
-  const IConverterItem* converterItem = getConverterItem(sourceType, targetType);
-  if ( !converterItem ) {
-    logError( std::format( "No converter from {} to {}", sourceType.name(), targetType.name() ) );
+bool Converter::convert(const type_info &sourceType, const void *sourceValue,
+                        const type_info &targetType, void *targetValue,
+                        const char *properties) const noexcept {
+  const IConverterItem *converterItem =
+      getConverterItem(sourceType, targetType);
+  if (!converterItem) {
+    logError(std::format("No converter from {} to {}", sourceType.name(),
+                         targetType.name()));
     return false;
   }
   try {
-    return converterItem->convert( sourceValue, targetValue, properties);
+    return converterItem->convert(sourceValue, targetValue, properties);
   } catch (...) {
-    logError( std::string("Failed to convert ") + sourceType.name() + " to " + targetType.name() );
+    logError(std::string("Failed to convert ") + sourceType.name() + " to " +
+             targetType.name());
   }
   return false;
 }
 
-IConverterItem *VLS::Converter::Converter::Converter::getConverterItem(const type_info &sourceType, const type_info &targetType) const
-{
-  for (const auto& cItem: _converterItems)
-  {
-    if (cItem->sourceType() == sourceType && cItem->targetType() == targetType) {
+IConverterItem *VLS::Converter::Converter::Converter::getConverterItem(
+    const type_info &sourceType, const type_info &targetType) const {
+  for (const auto &cItem : _converterItems) {
+    if (cItem->sourceType() == sourceType &&
+        cItem->targetType() == targetType) {
       return cItem.get();
     }
   }
   return nullptr;
 }
 
-}
+}  // namespace VLS::Converter

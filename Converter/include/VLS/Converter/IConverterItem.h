@@ -26,12 +26,13 @@ namespace VLS::Converter {
 ///
 /// </remarks>
 class IConverterItem {
-public:
+ public:
   virtual ~IConverterItem() = default;
 
-  virtual bool convert(const void* source, void* target, const char* properties = nullptr ) const = 0;
+  virtual bool convert(const void* source, void* target,
+                       const char* properties = nullptr) const = 0;
 
   virtual const type_info& sourceType() const = 0;
   virtual const type_info& targetType() const = 0;
 };
-}
+}  // namespace VLS::Converter

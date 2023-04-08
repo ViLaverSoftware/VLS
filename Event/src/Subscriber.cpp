@@ -17,48 +17,42 @@
  */
 #include "VLS/Event/Subscriber.h"
 
-#include "VLS/Event/Publisher.h"
-
 #include <assert.h>
+
+#include "VLS/Event/Publisher.h"
 
 namespace VLS::Event {
 
-Subscriber::~Subscriber()
-{
-    UnsubscribeAll();
+Subscriber::~Subscriber() { UnsubscribeAll(); }
+
+void Subscriber::UnsubscribeAll() {
+  while (!m_publishers.empty()) {
+    m_publishers.back()->_unsubscribe(this);
+  }
 }
 
-void Subscriber::UnsubscribeAll()
-{
-    while (!m_publishers.empty()) {
-        m_publishers.back()->_unsubscribe(this);
-    }
+bool Subscriber::Unsubscribe(Publisher& publisher) {
+  return publisher._unsubscribe(this);
 }
 
-bool Subscriber::Unsubscribe(Publisher& publisher)
-{
-    return publisher._unsubscribe(this);
+size_t Subscriber::PublisherCount() const { return m_publishers.size(); }
+
+bool Subscriber::_subscribe(Publisher* publisher) {
+  auto it = std::find(m_publishers.begin(), m_publishers.end(), publisher);
+  if (it != m_publishers.end()) {
+    return false;
+  }
+  m_publishers.push_back(publisher);
+  return true;
 }
 
-size_t Subscriber::PublisherCount() const
-{
-    return m_publishers.size();
+bool Subscriber::_unsubsribe(Publisher* publisher) {
+  auto it = std::find(m_publishers.begin(), m_publishers.end(), publisher);
+  if (it == m_publishers.end()) {
+    return false;
+  }
+  m_publishers.erase(it);
+  return true;
 }
 
-bool Subscriber::_subscribe(Publisher* publisher)
-{
-    auto it = std::find(m_publishers.begin(), m_publishers.end(), publisher);
-    if (it != m_publishers.end()) { return false; }
-    m_publishers.push_back(publisher);
-    return true;
-}
-
-bool Subscriber::_unsubsribe(Publisher* publisher)
-{
-    auto it = std::find(m_publishers.begin(), m_publishers.end(), publisher);
-    if (it == m_publishers.end()) { return false; }
-    m_publishers.erase(it);
-    return true;
-}
-
-}
+}  // namespace VLS::Event

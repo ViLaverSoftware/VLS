@@ -25,23 +25,25 @@ namespace VLS::Event {
 /// Interface class for the EventLoop class.
 /// </summary>
 /// <remarks>
-/// By having an interface it is possible to create an alternative implementation of the EventLoop class.
-/// The interface contains the only function used by the EventHandler class.
+/// By having an interface it is possible to create an alternative
+/// implementation of the EventLoop class. The interface contains the only
+/// function used by the EventHandler class.
 /// </remarks>
 class IEventLoop {
-public:
-    virtual ~IEventLoop() = default;
+ public:
+  virtual ~IEventLoop() = default;
 
-    /// <summary>
-    /// Function is triggered when the EventHandler Trigger() function is called.
-    /// </summary>
-    /// <remarks>
-    /// The triggered function is packed into a lambda function with no arguments or return value, but
-    /// the arguments of the triggered event is included in the lambda function and used when the func 
-    /// is called.
-    /// </remarks>
-    /// <param name=""> Callable function with no arguments or return value. </param>
-    virtual void Enqueue(const std::function<void(void)>& func) = 0;
+  /// <summary>
+  /// Function is triggered when the EventHandler Trigger() function is called.
+  /// </summary>
+  /// <remarks>
+  /// The triggered function is packed into a lambda function with no arguments
+  /// or return value, but the arguments of the triggered event is included in
+  /// the lambda function and used when the func is called.
+  /// </remarks>
+  /// <param name=""> Callable function with no arguments or return value.
+  /// </param>
+  virtual void Enqueue(const std::function<void(void)>& func) = 0;
 };
 
-}
+}  // namespace VLS::Event

@@ -17,85 +17,85 @@
  */
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace VLS::Event {
 
 class Publisher;
 
 /// <summary>
-/// Can subscribe to a publisher derived object. 
+/// Can subscribe to a publisher derived object.
 /// </summary>
 /// <remarks>
-/// One subscriber can subscribe to multiple publishers and will automatically unsubscribe
-/// when deallocated. 
+/// One subscriber can subscribe to multiple publishers and will automatically
+/// unsubscribe when deallocated.
 /// </remarks>
 class Subscriber {
+ public:
+  using UPtr = std::unique_ptr<Subscriber>;
 
-public:
-    using UPtr = std::unique_ptr<Subscriber>;
+  /// <summary>
+  /// Copy the object is not allowed.
+  /// </summary>
+  /// <remarks>
+  /// Copy would break the subscriber functionality.
+  /// </remarks>
+  Subscriber(const Subscriber&) = delete;
+  Subscriber() = default;
 
-    /// <summary>
-    /// Copy the object is not allowed.
-    /// </summary>
-    /// <remarks>
-    /// Copy would break the subscriber functionality. 
-    /// </remarks>
-    Subscriber(const Subscriber&) = delete;
-    Subscriber() = default;
+  /// <remarks>
+  /// Automatically unsubscribes from all existing subscriptions.
+  /// </remarks>
+  virtual ~Subscriber();
 
-    /// <remarks>
-    /// Automatically unsubscribes from all existing subscriptions.
-    /// </remarks>
-    virtual ~Subscriber();
+  /// <summary>
+  /// Unsubscribes from all subscriptions.
+  /// </summary>
+  void UnsubscribeAll();
 
-    /// <summary>
-    /// Unsubscribes from all subscriptions.
-    /// </summary>
-    void UnsubscribeAll();
+  /// <summary>
+  /// Unsubscribes from subscriptions to the publisher.
+  /// </summary>
+  /// <param name="publisher"> Publisher object that is unsubscribed from.
+  /// </param> <returns> True is subscription was successful. </returns>
+  bool Unsubscribe(Publisher& publisher);
 
-    /// <summary>
-    /// Unsubscribes from subscriptions to the publisher.
-    /// </summary>
-    /// <param name="publisher"> Publisher object that is unsubscribed from. </param>
-    /// <returns> True is subscription was successful. </returns>
-    bool Unsubscribe(Publisher& publisher);
+  /// <summary>
+  /// Returns the number of publishers with an active subscription.
+  /// </summary>
+  /// <returns> Number of publishers with an active subscription. </returns>
+  size_t PublisherCount() const;
 
-    /// <summary>
-    /// Returns the number of publishers with an active subscription.
-    /// </summary>
-    /// <returns> Number of publishers with an active subscription. </returns>
-    size_t PublisherCount() const;
+ private:
+  /// <summary>
+  /// Subscribes to a publisher.
+  /// </summary>
+  /// <remarks>
+  /// Used by the publisher to register when a subscriptions has been made.
+  /// </remarks>
+  /// <param name="publisher"> Publisher object pointer. </param>
+  /// <returns> True if publisher has been added. </returns>
+  bool _subscribe(Publisher* publisher);
 
-private:
-    /// <summary>
-    /// Subscribes to a publisher.
-    /// </summary>
-    /// <remarks>
-    /// Used by the publisher to register when a subscriptions has been made.
-    /// </remarks>
-    /// <param name="publisher"> Publisher object pointer. </param>
-    /// <returns> True if publisher has been added. </returns>
-    bool _subscribe(Publisher* publisher);
+  /// <summary>
+  /// Unsubscribes a publisher.
+  /// </summary>
+  /// <remarks>
+  /// Used by the publisher to remove registration after the subscriber as been
+  /// unsubscribed.
+  /// </remarks>
+  /// <param name=""> Publisher object pointer. </param>
+  /// <returns> True if the publisher has been removed. </returns>
+  bool _unsubsribe(Publisher* publisher);
 
-    /// <summary>
-    /// Unsubscribes a publisher.
-    /// </summary>
-    /// <remarks>
-    /// Used by the publisher to remove registration after the subscriber as been unsubscribed.
-    /// </remarks>
-    /// <param name=""> Publisher object pointer. </param>
-    /// <returns> True if the publisher has been removed. </returns>
-    bool _unsubsribe(Publisher* publisher);
+ private:
+  /// <summary>
+  /// List of active publishers.
+  /// </summary>
+  std::vector<Publisher*> m_publishers;
 
-private:
-    /// <summary>
-    /// List of active publishers.
-    /// </summary>
-    std::vector<Publisher*> m_publishers;
-
-    friend class Publisher;
+  friend class Publisher;
 };
 
-}
+}  // namespace VLS::Event

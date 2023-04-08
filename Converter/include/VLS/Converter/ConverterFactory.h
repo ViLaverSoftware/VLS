@@ -32,12 +32,12 @@ using ConverterPtr = std::shared_ptr<Converter>;
 ///
 /// </remarks>
 class ConverterFactory {
-public:
+ public:
   static ConverterPtr newEmptyConverter();
 
-  static void addDefaultConverterItems( ConverterPtr converter);
+  static void addDefaultConverterItems(ConverterPtr converter);
 
   static ConverterPtr defaultConverter();
 };
 
-}
+}  // namespace VLS::Converter

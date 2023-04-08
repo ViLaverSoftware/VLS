@@ -30,69 +30,61 @@ namespace VLS::Event {
 /// </remarks>
 /// </summary>
 template <class T>
-class SafeQueue
-{
-public:
+class SafeQueue {
+ public:
+  SafeQueue() = default;
 
-    SafeQueue() = default;
+  /// <summary>
+  /// Queue can not be copied.
+  /// </summary>
+  SafeQueue(const SafeQueue&) = delete;
 
-    /// <summary>
-    /// Queue can not be copied.
-    /// </summary>
-    SafeQueue(const SafeQueue&) = delete;
+  /// <summary>
+  /// Add a element to the queue.
+  /// </summary>
+  /// <param name="value"> Queue element. </param>
+  void Enqueue(T value) {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_queue.push(value);
+    m_conVar.notify_one();
+  }
 
-    /// <summary>
-    /// Add a element to the queue.
-    /// </summary>
-    /// <param name="value"> Queue element. </param>
-    void Enqueue(T value)
-    {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        m_queue.push(value);
-        m_conVar.notify_one();
+  /// <summary>
+  /// Get the front element of the queue. Wait if the queue is empty.
+  /// </summary>
+  /// <returns> Front element of the queue. </returns>
+  T Dequeue() {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    while (m_queue.empty()) {
+      // release lock as long as the wait and reacquire it afterwards.
+      m_conVar.wait(lock);
     }
+    T value = m_queue.front();
+    m_queue.pop();
+    return value;
+  }
 
-    /// <summary>
-    /// Get the front element of the queue. Wait if the queue is empty.
-    /// </summary>
-    /// <returns> Front element of the queue. </returns>
-    T Dequeue()
-    {
-        std::unique_lock<std::mutex> lock(m_mutex);
-        while (m_queue.empty())
-        {
-            // release lock as long as the wait and reacquire it afterwards.
-            m_conVar.wait(lock);
-        }
-        T value = m_queue.front();
-        m_queue.pop();
-        return value;
-    }
+  /// <summary>
+  /// Returns the number of elements on the queue.
+  /// </summary>
+  /// <returns> Number of elements on the queue. </returns>
+  size_t WaitingCount() const { return m_queue.size(); }
 
-    /// <summary>
-    /// Returns the number of elements on the queue.
-    /// </summary>
-    /// <returns> Number of elements on the queue. </returns>
-    size_t WaitingCount() const 
-    {
-        return m_queue.size();
-    }
+ private:
+  /// <summary>
+  /// Queue with elements.
+  /// </summary>
+  std::queue<T> m_queue;
 
-private:
-    /// <summary>
-    /// Queue with elements.
-    /// </summary>
-    std::queue<T> m_queue;
+  /// <summary>
+  /// Mutex used to protect the queue.
+  /// </summary>
+  std::mutex m_mutex;
 
-    /// <summary>
-    /// Mutex used to protect the queue.
-    /// </summary>
-    std::mutex m_mutex;
-
-    /// <summary>
-    ///  Used to wait for new elements.
-    /// </summary>
-    std::condition_variable m_conVar;
+  /// <summary>
+  ///  Used to wait for new elements.
+  /// </summary>
+  std::condition_variable m_conVar;
 };
 
-}
+}  // namespace VLS::Event

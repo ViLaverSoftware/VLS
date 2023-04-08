@@ -1,35 +1,27 @@
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
 #ifdef __cpp_lib_source_location
 #include <source_location>
 #endif
 
-namespace VLS::Log
-{
+namespace VLS::Log {
 
-enum class LogLevel
-{
-  Trace,
-  Debug,
-  Info,
-  Warning,
-  Error,
-  Critical
-};
+enum class LogLevel { Trace, Debug, Info, Warning, Error, Critical };
 
 const char* logLevelName(LogLevel value);
 
 class LogSink {
-public:
+ public:
   virtual ~LogSink() = default;
 
-    virtual std::string name() const = 0;
+  virtual std::string name() const = 0;
 
 #ifdef __cpp_lib_source_location
-  void log(LogLevel level, const std::string& message, const std::source_location location = std::source_location()) const;
+  void log(LogLevel level, const std::string& message,
+           const std::source_location location = std::source_location()) const;
 #else
   void log(LogLevel level, const std::string& message) const;
 #endif
@@ -37,9 +29,10 @@ public:
   LogLevel filterLogLevel() const;
   void setFilterLogLevel(LogLevel value);
 
-protected:
+ protected:
 #ifdef __cpp_lib_source_location
-  virtual void privateLog(LogLevel level, const std::string& message, const std::source_location location) const = 0;
+  virtual void privateLog(LogLevel level, const std::string& message,
+                          const std::source_location location) const = 0;
 #else
   virtual void privateLog(LogLevel level, const std::string& message) const = 0;
 #endif
@@ -47,4 +40,4 @@ protected:
   LogLevel m_filterLogLevel = LogLevel::Trace;
 };
 
-}
+}  // namespace VLS::Log

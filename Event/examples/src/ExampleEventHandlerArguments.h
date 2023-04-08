@@ -17,26 +17,26 @@
  */
 #pragma once
 
-#include "VLS/Event/EventHandler.h"
 #include <iostream>
+
+#include "VLS/Event/EventHandler.h"
 
 using namespace std;
 
-void ExampleEventHandlerArguments()
-{
-    cout << "Example EventHandler Arguments" << endl;
+void ExampleEventHandlerArguments() {
+  cout << "Example EventHandler Arguments" << endl;
 
-    // Create a event handler with two event arguments
-    VLS::Event::EventHandler<std::string, int> valueChanged;
+  // Create a event handler with two event arguments
+  VLS::Event::EventHandler<std::string, int> valueChanged;
 
-    // Subscribe to the event with a lambda function without an unsubscribe option
-    valueChanged.SubscribePersistent([](const std::string& text, int number){ 
-        cout << text << " (" << number << ")" << endl; 
-    });
+  // Subscribe to the event with a lambda function without an unsubscribe option
+  valueChanged.SubscribePersistent([](const std::string& text, int number) {
+    cout << text << " (" << number << ")" << endl;
+  });
 
-    // Trigger the event
-    cout << "> Trigger event: ";
-    valueChanged.Trigger("Hello World", 42);
+  // Trigger the event
+  cout << "> Trigger event: ";
+  valueChanged.Trigger("Hello World", 42);
 
-    cout << endl;
+  cout << endl;
 }

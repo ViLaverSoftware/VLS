@@ -17,21 +17,21 @@
  */
 #pragma once
 
+#include "IBookPublisher.h"
 #include "VLS/Event/EventHandler.h"
 
-#include "IBookPublisher.h"
+class BookPublisher : public IBookPublisher {
+ public:
+  void AddBook(const std::string& name) { m_newBookEvent.Trigger(name); }
 
-class BookPublisher : public IBookPublisher
-{
-public:
-    void AddBook(const std::string& name) {
-        m_newBookEvent.Trigger(name);
-    }
+  VLS::Event::IEventHandler<std::string>& NewBookEvent() const override {
+    return m_newBookEvent;
+  }
 
-    VLS::Event::IEventHandler<std::string>& NewBookEvent() const override { return m_newBookEvent; }
-
-private:
-    // Mutable is used because subscribing to changes to an object should never affect the functionality of the object
-    // The EventHandler class manages subscriptions and can be used to trigger events using the template parameters as arguments
-    mutable VLS::Event::EventHandler<std::string> m_newBookEvent;
+ private:
+  // Mutable is used because subscribing to changes to an object should never
+  // affect the functionality of the object The EventHandler class manages
+  // subscriptions and can be used to trigger events using the template
+  // parameters as arguments
+  mutable VLS::Event::EventHandler<std::string> m_newBookEvent;
 };

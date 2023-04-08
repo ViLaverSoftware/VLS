@@ -17,29 +17,30 @@
  */
 #pragma once
 
-#include "IBookPublisher.h"
-
 #include <iostream>
 
-class BookSubscriber : private VLS::Event::Subscriber
-{
-public:
-    BookSubscriber(const std::string& name) : m_name(name) {}
+#include "IBookPublisher.h"
 
-    void SubscribeToPublications(const IBookPublisher& bookPublisher)
-    {
-        // Subscribe with a member function
-        bookPublisher.NewBookEvent().Subscribe(m_subscriber, VLS::Event::Func::Bind(this, &BookSubscriber::OnNewBookPublished));
-    }
+class BookSubscriber : private VLS::Event::Subscriber {
+ public:
+  BookSubscriber(const std::string& name) : m_name(name) {}
 
-private:
-    void OnNewBookPublished(const std::string& bookName)
-    {
-        std::cout << "> Subscriber " << m_name << " received a new book: " << bookName << std::endl;
-    }
+  void SubscribeToPublications(const IBookPublisher& bookPublisher) {
+    // Subscribe with a member function
+    bookPublisher.NewBookEvent().Subscribe(
+        m_subscriber,
+        VLS::Event::Func::Bind(this, &BookSubscriber::OnNewBookPublished));
+  }
 
-    // The subscriber class can hold event subscriptions and it will automatically unsubscribe when deallocated.
-    VLS::Event::Subscriber m_subscriber;
+ private:
+  void OnNewBookPublished(const std::string& bookName) {
+    std::cout << "> Subscriber " << m_name
+              << " received a new book: " << bookName << std::endl;
+  }
 
-    std::string m_name;
+  // The subscriber class can hold event subscriptions and it will automatically
+  // unsubscribe when deallocated.
+  VLS::Event::Subscriber m_subscriber;
+
+  std::string m_name;
 };

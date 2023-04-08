@@ -17,44 +17,39 @@
  */
 #pragma once
 
-#include "VLS/Event/EventHandler.h"
 #include <iostream>
+
+#include "VLS/Event/EventHandler.h"
 
 using namespace std;
 
-void FreeFunction()
-{
-    cout << "> Free Function" << endl;
-}
+void FreeFunction() { cout << "> Free Function" << endl; }
 
 class ExampleClass {
-public:
-    void MemberFunction() {
-        cout << "> Member Function" << endl;
-    }
+ public:
+  void MemberFunction() { cout << "> Member Function" << endl; }
 };
 
-void ExampleEventHandlerCallbackFunctions()
-{
-    cout << "Example EventHandler Callback Functions" << endl;
+void ExampleEventHandlerCallbackFunctions() {
+  cout << "Example EventHandler Callback Functions" << endl;
 
-    // Create a event handler
-    VLS::Event::EventHandler<> valueChanged;
+  // Create a event handler
+  VLS::Event::EventHandler<> valueChanged;
 
-    // Subscribe to the event with a free function
-    valueChanged.SubscribePersistent(&FreeFunction);
+  // Subscribe to the event with a free function
+  valueChanged.SubscribePersistent(&FreeFunction);
 
-    // Subscribe to the event with a member function
-    ExampleClass eClass;
-    valueChanged.SubscribePersistent(VLS::Event::Func::Bind(&eClass, &ExampleClass::MemberFunction));
+  // Subscribe to the event with a member function
+  ExampleClass eClass;
+  valueChanged.SubscribePersistent(
+      VLS::Event::Func::Bind(&eClass, &ExampleClass::MemberFunction));
 
-    // Subscribe to the event with a lambda function
-    valueChanged.SubscribePersistent([](){ 
-        cout << "> Lambda Function" << endl; 
-    });
+  // Subscribe to the event with a lambda function
+  valueChanged.SubscribePersistent(
+      []() { cout << "> Lambda Function" << endl; });
 
-    // Trigger the event
-    valueChanged.Trigger();
+  // Trigger the event
+  valueChanged.Trigger();
 
-    cout << endl;
+  cout << endl;
 }
