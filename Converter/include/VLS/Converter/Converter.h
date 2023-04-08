@@ -54,10 +54,19 @@ public:
   template<typename T1, typename T2>
   bool convert( const T1& source, T2& target, const char* properties = nullptr) const noexcept;
 
+  template<typename T>
+  bool convert( const char* source, T& target, const char* properties = nullptr) const noexcept;
+
   template<typename T1, typename T2>
   T2 convert( const T1& source, const char* properties = nullptr ) const;
 
+  template<typename T>
+  T convert( const char* source, const char* properties = nullptr ) const;
+
   template<typename T1, typename T2>
+  bool hasConverter() const noexcept;
+
+  template<const char*, typename T>
   bool hasConverter() const noexcept;
 
 private:
@@ -72,7 +81,6 @@ private:
 
   friend class ValueConverter;
 };
-
 // Implementation
 
 template<typename T1, typename T2>
@@ -119,10 +127,22 @@ bool Converter::convert(const T1 &source, T2 &target, const char *properties) co
   return convert(typeid(T1), &source, typeid(T2), &target, properties);
 }
 
+template<typename T>
+bool Converter::convert(const char *source, T &target, const char *properties) const noexcept
+{
+  return convert( std::string(source), &target, properties );
+}
+
 template<typename T1, typename T2>
 T2 Converter::convert(const T1 &source, const char *properties) const
 {
   return convert<T2>( typeid(T1), &source, properties );
+}
+
+template<typename T>
+T Converter::convert(const char *source, const char *properties) const
+{
+  return convert<T>( std::string( source ), properties );
 }
 
 template<typename T>
@@ -153,6 +173,12 @@ template<typename T1, typename T2>
 bool Converter::hasConverter() const noexcept
 {
   return getConverterItem(typeid(T1), typeid(T2)) != nullptr;
+}
+
+template<const char*, typename T2>
+bool Converter::hasConverter() const noexcept
+{
+  return getConverterItem(typeid(std::string), typeid(T2)) != nullptr;
 }
 
 }

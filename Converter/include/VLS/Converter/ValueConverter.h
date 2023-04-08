@@ -24,17 +24,19 @@ namespace VLS::Converter {
 class ValueConverter
 {
 public:
-  template< typename T>
+  template<typename T>
   ValueConverter( T& value, ConverterPtr converter = ConverterPtr() );
 
-  template< typename T >
+  template<typename T>
   T value(const char *properties = nullptr) const;
 
-  template< typename T >
+  template<typename T>
   bool get(T& value, const char* properties = nullptr) noexcept;
 
-  template< typename T >
+  template<typename T>
   bool set(const T& value, const char* properties = nullptr) noexcept;
+
+  bool set(const char* value, const char* properties = nullptr) noexcept;
 
   const type_info& type() const;
 

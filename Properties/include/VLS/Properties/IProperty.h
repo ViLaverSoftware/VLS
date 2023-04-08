@@ -35,8 +35,6 @@ public:
 
   virtual ~IProperty() = default;
 
-
-
   template<typename T>
   bool get(T& value) const;
 

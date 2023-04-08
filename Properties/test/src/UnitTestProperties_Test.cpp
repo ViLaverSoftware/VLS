@@ -21,13 +21,20 @@
 
 #include <VLS/Properties/Property.h>
 
+#include <VLS/Log/Log.h>
+#include <VLS/Log/LogHandler.h>
+#include <VLS/Log/ConsoleLogSink.h>
+
 using namespace VLS::Properties;
 
 TEST(VLSProperties, Test) {
+  auto consoleSink = std::make_shared<Log::ConsoleLogSink>();
+  Log::LogHandler::instance()->addLogSink( consoleSink );
+
   Property<std::string> property;
   EXPECT_EQ(property.value(), "");
 
-  property.set(std::string("42"));
+  property.set("42");
   EXPECT_EQ(property.value(), "42");
   EXPECT_EQ(property.value<int>(), 42);
 }

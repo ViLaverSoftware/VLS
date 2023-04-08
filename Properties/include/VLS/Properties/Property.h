@@ -35,6 +35,9 @@ class Property: public Converter::ValueConverter {
 public:
   Property();
 
+  Property<T>& operator=(const Property<T>& other);
+  Property<T>& operator=(const T& other);
+
   const T& value() const;
   using Converter::ValueConverter::value;
 
@@ -43,6 +46,10 @@ public:
 
   void set(const T& value);
 
+  template< typename T2 >
+  bool set(const T2& value, const char* properties = nullptr) noexcept;
+  bool set(const char* value, const char* properties = nullptr) noexcept;
+
   Event::EventHandler<T> changed;
 
 protected:
@@ -50,14 +57,43 @@ protected:
 };
 
 template<typename T>
-Property<T>::Property()
-  : VLS::Converter::ValueConverter(m_data)
+template< typename T2>
+bool Property<T>::set(const T2& value, const char* properties) noexcept
 {
-
+  if ( ValueConverter::set( value, properties ) ) {
+    changed.Trigger( m_data );
+    return true;
+  }
+  return false;
 }
 
 template<typename T>
-const T &Property<T>::value() const
+bool Property<T>::set(const char* value, const char *properties) noexcept
+{
+  return set( std::string(value), properties );
+}
+
+template<typename T>
+Property<T>::Property()
+  : VLS::Converter::ValueConverter(m_data)
+{
+}
+
+template<typename T>
+Property<T>& Property<T>::operator=(const Property<T>& other)
+{
+  return *this = other.get();
+}
+
+template<typename T>
+Property<T>& Property<T>::operator=(const T& _value)
+{
+  set( _value );
+  return *this;
+}
+
+template<typename T>
+const T& Property<T>::value() const
 {
   return m_data;
 }
@@ -76,5 +112,4 @@ void Property<T>::set(const T& value)
     changed.Trigger( m_data );
   }
 }
-
 }

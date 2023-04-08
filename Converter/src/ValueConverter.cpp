@@ -1,6 +1,6 @@
 /*
  * Copyright 2020 Vilaversoftware IVS (http://vilaversoftware.dk/)
- * Author: Mikkel Nøhr Løvgreen (ml@vilaversoftware.dk)
+ * Author: Mikkel N?hr L?vgreen (ml@vilaversoftware.dk)
  * ------------------------------------------------------------------------
  * Licensed to Vilaversoftware IVS who licenses this file to you under the
  * Apache License, Version 2.0 (the "License"); you may not use this file
@@ -15,11 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "VLS/Properties/Property.h"
+#include <VLS/Converter/ValueConverter.h>
 
-using namespace VLS::Converter;
+namespace VLS::Converter
+{
+bool ValueConverter::set(const char *value, const char *properties) noexcept
+{
+    std::string strValue(value);
+    return m_converter->convert(typeid(std::string), &strValue, m_valueTypeInfo, m_valuePtr, properties);
+}
 
-namespace VLS::Properties {
-
+const type_info &ValueConverter::type() const
+{
+    return m_valueTypeInfo;
+}
 
 }
