@@ -21,6 +21,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <format>
 #include <string>
 
 using namespace VLS::Log;
@@ -45,8 +46,47 @@ void ConverterFactory::addDefaultConverterItems(ConverterPtr converter) {
       });
 
   converter->addConverter<int, std::string>(
-      [](const int& source, std::string& target, const std::string&) {
-        target = std::to_string(source);
+      [](const int& source, std::string& target, const std::string& format) {
+        if (format.empty()) {
+          target = std::to_string(source);
+        } else {
+          std::string temp = std::format("{{{}}}", format);
+          target = std::vformat(temp, std::make_format_args(source));
+        }
+        return true;
+      });
+
+  converter->addConverter<std::string, float>(
+      [](const std::string& source, float& target, const std::string&) {
+        target = stof(source);
+        return true;
+      });
+
+  converter->addConverter<float, std::string>(
+      [](const float& source, std::string& target, const std::string& format) {
+        if (format.empty()) {
+          target = std::to_string(source);
+        } else {
+          std::string temp = std::format("{{{}}}", format);
+          target = std::vformat(temp, std::make_format_args(source));
+        }
+        return true;
+      });
+
+  converter->addConverter<std::string, double>(
+      [](const std::string& source, double& target, const std::string&) {
+        target = stof(source);
+        return true;
+      });
+
+  converter->addConverter<double, std::string>(
+      [](const double& source, std::string& target, const std::string& format) {
+        if (format.empty()) {
+          target = std::to_string(source);
+        } else {
+          std::string temp = std::format("{{{}}}", format);
+          target = std::vformat(temp, std::make_format_args(source));
+        }
         return true;
       });
 

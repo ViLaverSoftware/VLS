@@ -57,6 +57,15 @@ class Converter {
   template <typename T>
   void addAsignmentConverter();
 
+  /**
+   * @brief convert converts the source value to the target value.
+   * The function finds and uses the matching converter function.
+   * Use addConverter to add any needed converters.
+   * @param source
+   * @param target
+   * @param format optional format string.
+   * @return true if convertion is successfull, otherwise false.
+   */
   template <typename T1, typename T2>
   bool convert(const T1& source, T2& target,
                const std::string& format = std::string()) const noexcept;
@@ -66,7 +75,7 @@ class Converter {
                const std::string& format = std::string()) const noexcept;
 
   template <typename T1, typename T2>
-  T2 convert(const T1& source, const std::string& format = std::string()) const;
+  T1 convert(const T2& source, const std::string& format = std::string()) const;
 
   template <typename T>
   T convert(const char* source,
@@ -116,14 +125,14 @@ bool Converter::addConverter(
 
   if (it == std::end(_converterItems)) {
     // Add new converter
-    logTrace(std::format("Adding new from {} to {} converter",
+    logTrace(std::format("Adding new from \"{}\" to \"{}\" converter",
                          typeid(T1).name(), typeid(T2).name()));
     _converterItems.push_back(std::move(converterItem));
     return true;
   } else {
     // Replace existing converter
     *it = std::move(converterItem);
-    logWarning(std::format("Replacing existing from {} to {} converter",
+    logWarning(std::format("Replacing existing from \"{}\" to \"{}\" converter",
                            typeid(T1).name(), typeid(T2).name()));
     return false;
   }
@@ -131,12 +140,7 @@ bool Converter::addConverter(
 
 template <typename T>
 void Converter::addAsignmentConverter() {
-  auto it = std::find_if(std::begin(_converterItems), std::end(_converterItems),
-                         [=](std::unique_ptr<IConverterItem>& item) {
-                           return typeid(T) == item->sourceType() &&
-                                  typeid(T) == item->targetType();
-                         });
-  if (it == std::end(_converterItems)) {
+  if (!hasConverter<T, T>()) {
     _converterItems.push_back(std::make_unique<ConverterItem<T, T>>(
         [](const T& source, T& target, const std::string&) {
           target = source;
@@ -158,8 +162,8 @@ bool Converter::convert(const char* source, T& target,
 }
 
 template <typename T1, typename T2>
-T2 Converter::convert(const T1& source, const std::string& format) const {
-  return convert<T2>(typeid(T1), &source, format);
+T1 Converter::convert(const T2& source, const std::string& format) const {
+  return convert<T1>(typeid(T2), &source, format);
 }
 
 template <typename T>
@@ -177,7 +181,7 @@ T Converter::convert(const type_info& sourceType, const void* sourceValue,
 
   const IConverterItem* converterItem = getConverterItem(sourceType, typeid(T));
   if (!converterItem) {
-    auto errorText = std::format("No converter from {} to {}",
+    auto errorText = std::format("No converter from \"{}\" to \"{}\"",
                                  sourceType.name(), typeid(T).name());
     logError(errorText);
     throw std::exception(errorText.c_str());

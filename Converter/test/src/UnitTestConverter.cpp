@@ -28,8 +28,8 @@ using namespace VLS::Converter;
 using namespace VLS;
 
 TEST(VLSConverter, DevelopmentTests) {
-  //  auto consoleSink = std::make_shared<Log::ConsoleLogSink>();
-  //  Log::LogHandler::instance()->addLogSink( consoleSink );
+  auto consoleSink = std::make_shared<Log::ConsoleLogSink>();
+  Log::LogHandler::instance()->addLogSink(consoleSink);
 
   ConverterPtr converter = ConverterFactory::defaultConverter();
 
@@ -50,7 +50,7 @@ TEST(VLSConverter, DevelopmentTests) {
   bool r = converter->hasConverter<int, const char*>();
   EXPECT_FALSE(r);
 
-  auto str = converter->convert<int, std::string>(26);
+  auto str = converter->convert<std::string>(26);
   EXPECT_EQ(str, "26");
 
   bool addResult = converter->addConverter<int, std::string>(
@@ -60,12 +60,18 @@ TEST(VLSConverter, DevelopmentTests) {
       });
   EXPECT_FALSE(addResult);
 
-  str = converter->convert<int, std::string>(26);
+  str = converter->convert<std::string>(26);
   EXPECT_EQ(str, "26Int");
 
-  str = converter->convert<const char*, std::string>("MikkelNL");
+  str = converter->convert<std::string>("MikkelNL");
   EXPECT_EQ(str, "MikkelNL");
 
-  str = converter->convert<std::string, std::string>(std::string("asignment"));
+  str = converter->convert<std::string>(std::string("asignment"));
   EXPECT_EQ(str, "asignment");
+
+  str = converter->convert<std::string>(3.141f, ":10.2f");
+  EXPECT_EQ(str, "      3.14");
+
+  str = converter->convert<std::string>(3.141, ":.2f");
+  EXPECT_EQ(str, "3.14");
 }
