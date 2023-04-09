@@ -42,14 +42,14 @@ bool Converter::convert(const type_info &sourceType, const void *sourceValue,
 }
 
 IConverterItem *VLS::Converter::Converter::Converter::getConverterItem(
-    const type_info &sourceType, const type_info &targetType) const {
-  for (const auto &cItem : _converterItems) {
-    if (cItem->sourceType() == sourceType &&
-        cItem->targetType() == targetType) {
-      return cItem.get();
-    }
-  }
-  return nullptr;
+    const type_info &sourceType, const type_info &targetType) const noexcept {
+  auto it = std::find_if(
+      std::begin(_converterItems), std::end(_converterItems),
+      [&sourceType, &targetType](const std::unique_ptr<IConverterItem> &item) {
+        return sourceType == item->sourceType() &&
+               targetType == item->targetType();
+      });
+  return (it == _converterItems.end()) ? nullptr : it->get();
 }
 
 }  // namespace VLS::Converter

@@ -30,13 +30,11 @@ using namespace VLS;
 
 namespace VLS::Converter {
 
-/// <summary>
-/// The class can convert one data type to an other.
-/// </summary>
-/// <remarks>
-/// Funtions to convert one type to an other can be registered with the
-/// addConverter function.
-/// </remarks>
+/**
+ * @brief The Converter class can convert one data type to an other.
+ * Funtions to convert one type to an other can be registered with the
+ * addConverter function.
+ */
 class Converter {
  public:
   Converter() = default;
@@ -49,6 +47,12 @@ class Converter {
   template <typename T1, typename T2>
   bool addConverter(std::function<bool(const T1&, T2&, const char*)> func);
 
+  /**
+   * @brief addAsignmentConverter adds a converter from one type to the same
+   * type.
+   * It is needed when only a type and void pointer is known of both the
+   * source and target.
+   */
   template <typename T>
   void addAsignmentConverter();
 
@@ -81,8 +85,12 @@ class Converter {
                const type_info& targetType, void* targetValue,
                const char* properties) const noexcept;
 
+  /**
+   * @brief getConverterItem Return the converter item with matching source and
+   * target types. Return nullptr if it do not exist.
+   */
   IConverterItem* getConverterItem(const type_info& sourceType,
-                                   const type_info& targetType) const;
+                                   const type_info& targetType) const noexcept;
 
   std::vector<std::unique_ptr<IConverterItem>> _converterItems;
 
@@ -99,20 +107,21 @@ bool Converter::addConverter(
 
   // Check if converter already exists
   auto it = std::find_if(std::begin(_converterItems), std::end(_converterItems),
-                         [=](std::unique_ptr<IConverterItem>& item) {
+                         [=](const std::unique_ptr<IConverterItem>& item) {
                            return typeid(T1) == item->sourceType() &&
                                   typeid(T2) == item->targetType();
                          });
+
   if (it == std::end(_converterItems)) {
     // Add new converter
-    logTrace(std::format("Adding converter from {} to {}", typeid(T1).name(),
-                         typeid(T2).name()));
+    logTrace(std::format("Adding new from {} to {} converter",
+                         typeid(T1).name(), typeid(T2).name()));
     _converterItems.push_back(std::move(converterItem));
     return true;
   } else {
     // Replace existing converter
     *it = std::move(converterItem);
-    logWarning(std::format("Replacing existing converter from {} to {}",
+    logWarning(std::format("Replacing existing from {} to {} converter",
                            typeid(T1).name(), typeid(T2).name()));
     return false;
   }

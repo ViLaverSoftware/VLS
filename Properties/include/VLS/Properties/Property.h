@@ -22,12 +22,6 @@
 
 namespace VLS::Properties {
 
-/// <summary>
-///
-/// </summary>
-/// <remarks>
-///
-/// </remarks>
 template <typename T>
 class Property : public Converter::ValueConverter {
  public:

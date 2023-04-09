@@ -21,56 +21,53 @@
 
 namespace VLS::Converter {
 
-class ValueConverter
-{
-public:
-  template<typename T>
-  ValueConverter( T& value, ConverterPtr converter = ConverterPtr() );
+class ValueConverter {
+ public:
+  template <typename T>
+  ValueConverter(T& value, ConverterPtr converter = ConverterPtr());
 
-  template<typename T>
-  T value(const char *properties = nullptr) const;
+  template <typename T>
+  T value(const char* properties = nullptr) const;
 
-  template<typename T>
+  template <typename T>
   bool get(T& value, const char* properties = nullptr) noexcept;
 
-  template<typename T>
+  template <typename T>
   bool set(const T& value, const char* properties = nullptr) noexcept;
 
   bool set(const char* value, const char* properties = nullptr) noexcept;
 
   const type_info& type() const;
 
-private:
+ private:
   const type_info& m_valueTypeInfo;
-  void * m_valuePtr;
+  void* m_valuePtr;
   ConverterPtr m_converter;
 };
 
-template<typename T>
-ValueConverter::ValueConverter(T &value, ConverterPtr converter)
-  : m_valueTypeInfo{ typeid(T) }, m_valuePtr{ &value }, m_converter{ converter }
-{
-  if ( !m_converter ) {
+template <typename T>
+ValueConverter::ValueConverter(T& value, ConverterPtr converter)
+    : m_valueTypeInfo{typeid(T)}, m_valuePtr{&value}, m_converter{converter} {
+  if (!m_converter) {
     m_converter = ConverterFactory::defaultConverter();
   }
 }
 
-template<typename T>
-T ValueConverter::value(const char *properties) const
-{
-  return m_converter->convert<T>( m_valueTypeInfo, m_valuePtr, properties);
+template <typename T>
+T ValueConverter::value(const char* properties) const {
+  return m_converter->convert<T>(m_valueTypeInfo, m_valuePtr, properties);
 }
 
-template<typename T>
-bool ValueConverter::get(T &value, const char *properties) noexcept
-{
-  return m_converter->convert(m_valueTypeInfo, m_valuePtr, typeid(T), &value, properties);
+template <typename T>
+bool ValueConverter::get(T& value, const char* properties) noexcept {
+  return m_converter->convert(m_valueTypeInfo, m_valuePtr, typeid(T), &value,
+                              properties);
 }
 
-template<typename T>
-bool ValueConverter::set(const T &value, const char *properties) noexcept
-{
-  return m_converter->convert(typeid(T), &value, m_valueTypeInfo, m_valuePtr, properties);
+template <typename T>
+bool ValueConverter::set(const T& value, const char* properties) noexcept {
+  return m_converter->convert(typeid(T), &value, m_valueTypeInfo, m_valuePtr,
+                              properties);
 }
 
-}
+}  // namespace VLS::Converter
