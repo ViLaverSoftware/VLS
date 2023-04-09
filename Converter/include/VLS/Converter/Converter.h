@@ -45,7 +45,8 @@ class Converter {
    * @return
    */
   template <typename T1, typename T2>
-  bool addConverter(std::function<bool(const T1&, T2&, const char*)> func);
+  bool addConverter(
+      std::function<bool(const T1&, T2&, const std::string&)> func);
 
   /**
    * @brief addAsignmentConverter adds a converter from one type to the same
@@ -58,17 +59,18 @@ class Converter {
 
   template <typename T1, typename T2>
   bool convert(const T1& source, T2& target,
-               const char* properties = nullptr) const noexcept;
+               const std::string& format = std::string()) const noexcept;
 
   template <typename T>
   bool convert(const char* source, T& target,
-               const char* properties = nullptr) const noexcept;
+               const std::string& format = std::string()) const noexcept;
 
   template <typename T1, typename T2>
-  T2 convert(const T1& source, const char* properties = nullptr) const;
+  T2 convert(const T1& source, const std::string& format = std::string()) const;
 
   template <typename T>
-  T convert(const char* source, const char* properties = nullptr) const;
+  T convert(const char* source,
+            const std::string& format = std::string()) const;
 
   template <typename T1, typename T2>
   bool hasConverter() const noexcept;
@@ -79,11 +81,11 @@ class Converter {
  private:
   template <typename T>
   T convert(const type_info& sourceType, const void* sourceValue,
-            const char* properties = nullptr) const;
+            const std::string& format = std::string()) const;
 
   bool convert(const type_info& sourceType, const void* sourceValue,
                const type_info& targetType, void* targetValue,
-               const char* properties) const noexcept;
+               const std::string& format) const noexcept;
 
   /**
    * @brief getConverterItem Return the converter item with matching source and
@@ -100,7 +102,7 @@ class Converter {
 
 template <typename T1, typename T2>
 bool Converter::addConverter(
-    std::function<bool(const T1&, T2&, const char*)> func) {
+    std::function<bool(const T1&, T2&, const std::string&)> func) {
   auto converterItem = std::make_unique<ConverterItem<T1, T2>>(func);
 
   addAsignmentConverter<T2>();
@@ -136,7 +138,7 @@ void Converter::addAsignmentConverter() {
                          });
   if (it == std::end(_converterItems)) {
     _converterItems.push_back(std::make_unique<ConverterItem<T, T>>(
-        [](const T& source, T& target, const char*) {
+        [](const T& source, T& target, const std::string&) {
           target = source;
           return true;
         }));
@@ -145,29 +147,29 @@ void Converter::addAsignmentConverter() {
 
 template <typename T1, typename T2>
 bool Converter::convert(const T1& source, T2& target,
-                        const char* properties) const noexcept {
-  return convert(typeid(T1), &source, typeid(T2), &target, properties);
+                        const std::string& format) const noexcept {
+  return convert(typeid(T1), &source, typeid(T2), &target, format);
 }
 
 template <typename T>
 bool Converter::convert(const char* source, T& target,
-                        const char* properties) const noexcept {
-  return convert(std::string(source), &target, properties);
+                        const std::string& format) const noexcept {
+  return convert(std::string(source), &target, format);
 }
 
 template <typename T1, typename T2>
-T2 Converter::convert(const T1& source, const char* properties) const {
-  return convert<T2>(typeid(T1), &source, properties);
+T2 Converter::convert(const T1& source, const std::string& format) const {
+  return convert<T2>(typeid(T1), &source, format);
 }
 
 template <typename T>
-T Converter::convert(const char* source, const char* properties) const {
-  return convert<T>(std::string(source), properties);
+T Converter::convert(const char* source, const std::string& format) const {
+  return convert<T>(std::string(source), format);
 }
 
 template <typename T>
 T Converter::convert(const type_info& sourceType, const void* sourceValue,
-                     const char* properties) const {
+                     const std::string& format) const {
   // Return a copy of the source if values are equal
   if (sourceType == typeid(T)) {
     return *static_cast<const T*>(sourceValue);
@@ -182,7 +184,7 @@ T Converter::convert(const type_info& sourceType, const void* sourceValue,
   }
 
   T value;
-  if (converterItem->convert(sourceValue, &value, properties)) {
+  if (converterItem->convert(sourceValue, &value, format)) {
     return value;
   }
   auto errorText = std::string("Failed to convert ") + sourceType.name() +

@@ -24,7 +24,7 @@ namespace VLS::Converter {
 
 bool Converter::convert(const type_info &sourceType, const void *sourceValue,
                         const type_info &targetType, void *targetValue,
-                        const char *properties) const noexcept {
+                        const std::string &format) const noexcept {
   const IConverterItem *converterItem =
       getConverterItem(sourceType, targetType);
   if (!converterItem) {
@@ -33,7 +33,7 @@ bool Converter::convert(const type_info &sourceType, const void *sourceValue,
     return false;
   }
   try {
-    return converterItem->convert(sourceValue, targetValue, properties);
+    return converterItem->convert(sourceValue, targetValue, format);
   } catch (...) {
     logError(std::string("Failed to convert ") + sourceType.name() + " to " +
              targetType.name());

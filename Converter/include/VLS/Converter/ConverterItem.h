@@ -32,10 +32,11 @@ namespace VLS::Converter {
 template <typename T1, typename T2>
 class ConverterItem : public IConverterItem {
  public:
-  ConverterItem(std::function<bool(const T1&, T2&, const char*)> func)
+  ConverterItem(std::function<bool(const T1&, T2&, const std::string&)> func)
       : _func(func) {}
 
-  bool convert(const void* source, void* target, const char* properties) const;
+  bool convert(const void* source, void* target,
+               const std::string& format) const;
 
   template <typename T3, typename T4>
   bool typeMatch() const {
@@ -46,14 +47,14 @@ class ConverterItem : public IConverterItem {
   const type_info& targetType() const override;
 
  private:
-  std::function<bool(const T1&, T2&, const char*)> _func;
+  std::function<bool(const T1&, T2&, const std::string&)> _func;
 };
 
 template <typename T1, typename T2>
 bool ConverterItem<T1, T2>::convert(const void* source, void* target,
-                                    const char* properties) const {
+                                    const std::string& format) const {
   return _func(*static_cast<const T1*>(source), *static_cast<T2*>(target),
-               properties);
+               format);
 }
 
 template <typename T1, typename T2>

@@ -27,15 +27,16 @@ class ValueConverter {
   ValueConverter(T& value, ConverterPtr converter = ConverterPtr());
 
   template <typename T>
-  T value(const char* properties = nullptr) const;
+  T value(const std::string& format = std::string()) const;
 
   template <typename T>
-  bool get(T& value, const char* properties = nullptr) noexcept;
+  bool get(T& value, const std::string& format = std::string()) noexcept;
 
   template <typename T>
-  bool set(const T& value, const char* properties = nullptr) noexcept;
+  bool set(const T& value, const std::string& format = std::string()) noexcept;
 
-  bool set(const char* value, const char* properties = nullptr) noexcept;
+  bool set(const char* value,
+           const std::string &format = std::string()) noexcept;
 
   const type_info& type() const;
 
@@ -54,20 +55,20 @@ ValueConverter::ValueConverter(T& value, ConverterPtr converter)
 }
 
 template <typename T>
-T ValueConverter::value(const char* properties) const {
-  return m_converter->convert<T>(m_valueTypeInfo, m_valuePtr, properties);
+T ValueConverter::value(const std::string& format) const {
+  return m_converter->convert<T>(m_valueTypeInfo, m_valuePtr, format);
 }
 
 template <typename T>
-bool ValueConverter::get(T& value, const char* properties) noexcept {
+bool ValueConverter::get(T& value, const std::string& format) noexcept {
   return m_converter->convert(m_valueTypeInfo, m_valuePtr, typeid(T), &value,
-                              properties);
+                              format);
 }
 
 template <typename T>
-bool ValueConverter::set(const T& value, const char* properties) noexcept {
+bool ValueConverter::set(const T& value, const std::string& format) noexcept {
   return m_converter->convert(typeid(T), &value, m_valueTypeInfo, m_valuePtr,
-                              properties);
+                              format);
 }
 
 }  // namespace VLS::Converter

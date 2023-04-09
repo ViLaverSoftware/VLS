@@ -18,10 +18,11 @@
 #include <VLS/Converter/ValueConverter.h>
 
 namespace VLS::Converter {
-bool ValueConverter::set(const char *value, const char *properties) noexcept {
+bool ValueConverter::set(const char *value,
+                         const std::string &format) noexcept {
   std::string strValue(value);
   return m_converter->convert(typeid(std::string), &strValue, m_valueTypeInfo,
-                              m_valuePtr, properties);
+                              m_valuePtr, format);
 }
 
 const type_info &ValueConverter::type() const { return m_valueTypeInfo; }

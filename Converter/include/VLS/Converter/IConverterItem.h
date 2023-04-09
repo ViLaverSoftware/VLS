@@ -17,6 +17,8 @@
  */
 #pragma once
 
+#include <string>
+
 namespace VLS::Converter {
 
 /// <summary>
@@ -30,7 +32,7 @@ class IConverterItem {
   virtual ~IConverterItem() = default;
 
   virtual bool convert(const void* source, void* target,
-                       const char* properties = nullptr) const = 0;
+                       const std::string& format = std::string()) const = 0;
 
   virtual const type_info& sourceType() const = 0;
   virtual const type_info& targetType() const = 0;

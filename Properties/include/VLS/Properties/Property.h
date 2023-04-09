@@ -39,8 +39,9 @@ class Property : public Converter::ValueConverter {
   void set(const T& value);
 
   template <typename T2>
-  bool set(const T2& value, const char* properties = nullptr) noexcept;
-  bool set(const char* value, const char* properties = nullptr) noexcept;
+  bool set(const T2& value, const std::string& format = std::string()) noexcept;
+  bool set(const char* value,
+           const std::string& format = std::string()) noexcept;
 
   Event::EventHandler<T> changed;
 
@@ -50,8 +51,8 @@ class Property : public Converter::ValueConverter {
 
 template <typename T>
 template <typename T2>
-bool Property<T>::set(const T2& value, const char* properties) noexcept {
-  if (ValueConverter::set(value, properties)) {
+bool Property<T>::set(const T2& value, const std::string& format) noexcept {
+  if (ValueConverter::set(value, format)) {
     changed.Trigger(m_data);
     return true;
   }
@@ -59,8 +60,8 @@ bool Property<T>::set(const T2& value, const char* properties) noexcept {
 }
 
 template <typename T>
-bool Property<T>::set(const char* value, const char* properties) noexcept {
-  return set(std::string(value), properties);
+bool Property<T>::set(const char* value, const std::string& format) noexcept {
+  return set(std::string(value), format);
 }
 
 template <typename T>

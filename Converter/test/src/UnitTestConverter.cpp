@@ -20,17 +20,16 @@
 #pragma warning(pop)
 
 #include <VLS/Converter/ConverterFactory.h>
-
+#include <VLS/Log/ConsoleLogSink.h>
 #include <VLS/Log/Log.h>
 #include <VLS/Log/LogHandler.h>
-#include <VLS/Log/ConsoleLogSink.h>
 
 using namespace VLS::Converter;
 using namespace VLS;
 
 TEST(VLSConverter, DevelopmentTests) {
-//  auto consoleSink = std::make_shared<Log::ConsoleLogSink>();
-//  Log::LogHandler::instance()->addLogSink( consoleSink );
+  //  auto consoleSink = std::make_shared<Log::ConsoleLogSink>();
+  //  Log::LogHandler::instance()->addLogSink( consoleSink );
 
   ConverterPtr converter = ConverterFactory::defaultConverter();
 
@@ -38,34 +37,35 @@ TEST(VLSConverter, DevelopmentTests) {
   std::string expectedResult = "42";
   int source = 42;
 
-  converter->convert( source, result);
+  converter->convert(source, result);
 
-  EXPECT_EQ( result, expectedResult );
+  EXPECT_EQ(result, expectedResult);
 
   int intResult;
   std::string strSource = "-17";
-  converter->convert( strSource, intResult );
+  converter->convert(strSource, intResult);
 
-  EXPECT_EQ( intResult, -17 );
+  EXPECT_EQ(intResult, -17);
 
   bool r = converter->hasConverter<int, const char*>();
-  EXPECT_FALSE( r );
+  EXPECT_FALSE(r);
 
   auto str = converter->convert<int, std::string>(26);
-  EXPECT_EQ( str, "26");
+  EXPECT_EQ(str, "26");
 
-  bool addResult = converter->addConverter<int, std::string>( [](const int& source, std::string& target, const char*) {
-    target = std::to_string(source) + "Int";
-    return true;
-  } );
-  EXPECT_FALSE( addResult );
+  bool addResult = converter->addConverter<int, std::string>(
+      [](const int& source, std::string& target, const std::string&) {
+        target = std::to_string(source) + "Int";
+        return true;
+      });
+  EXPECT_FALSE(addResult);
 
   str = converter->convert<int, std::string>(26);
-  EXPECT_EQ( str, "26Int");
+  EXPECT_EQ(str, "26Int");
 
   str = converter->convert<const char*, std::string>("MikkelNL");
-  EXPECT_EQ( str, "MikkelNL");
+  EXPECT_EQ(str, "MikkelNL");
 
   str = converter->convert<std::string, std::string>(std::string("asignment"));
-  EXPECT_EQ( str, "asignment");
+  EXPECT_EQ(str, "asignment");
 }

@@ -33,25 +33,25 @@ ConverterPtr ConverterFactory::newEmptyConverter() {
 
 void ConverterFactory::addDefaultConverterItems(ConverterPtr converter) {
   converter->addConverter<const char*, std::string>(
-      [](const char* source, std::string& target, const char*) {
+      [](const char* source, std::string& target, const std::string&) {
         target = source;
         return true;
       });
 
   converter->addConverter<std::string, int>(
-      [](const std::string& source, int& target, const char*) {
+      [](const std::string& source, int& target, const std::string&) {
         target = stoi(source);
         return true;
       });
 
   converter->addConverter<int, std::string>(
-      [](const int& source, std::string& target, const char*) {
+      [](const int& source, std::string& target, const std::string&) {
         target = std::to_string(source);
         return true;
       });
 
   converter->addConverter<std::string, bool>(
-      [](const std::string& source, bool& target, const char*) {
+      [](const std::string& source, bool& target, const std::string&) {
         std::string s = source;
         std::transform(s.begin(), s.end(), s.begin(),
                        [](unsigned char c) { return std::tolower(c); });
@@ -65,7 +65,7 @@ void ConverterFactory::addDefaultConverterItems(ConverterPtr converter) {
       });
 
   converter->addConverter<bool, std::string>(
-      [](const bool& source, std::string& target, const char*) {
+      [](const bool& source, std::string& target, const std::string&) {
         return source ? "true" : "false";
       });
 }
