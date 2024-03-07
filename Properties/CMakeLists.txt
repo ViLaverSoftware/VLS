@@ -4,6 +4,8 @@ project(VLSProperties VERSION 1.0.0)
 
 add_library(${PROJECT_NAME})
 
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+
 file(GLOB_RECURSE PUBLIC_HEADERS include/*.h)
 target_sources(${PROJECT_NAME} PUBLIC ${PUBLIC_HEADERS})
 

@@ -1,15 +1,21 @@
 cmake_minimum_required(VERSION 3.10)
 
-find_package(GTest REQUIRED)
+find_package(GTest)
 
-file(GLOB SOURCES "src/*.cpp")
+if (${GTest_FOUND})
 
-add_executable(UnitTest${PROJECT_NAME} ${SOURCES})
+    file(GLOB SOURCES "src/*.cpp")
 
-target_link_libraries(UnitTest${PROJECT_NAME}
-    ${PROJECT_NAME}
-    gtest::gtest)
+    add_executable(UnitTest${PROJECT_NAME} ${SOURCES})
 
-include(GoogleTest)
+    target_link_libraries(UnitTest${PROJECT_NAME}
+        ${PROJECT_NAME}
+        gtest::gtest)
 
-gtest_add_tests(TARGET UnitTest${PROJECT_NAME})
+    include(GoogleTest)
+
+    gtest_add_tests(TARGET UnitTest${PROJECT_NAME})
+
+else()
+    message( "WARNING GTest not found. UnitTest${PROJECT_NAME} target not created." )
+endif()

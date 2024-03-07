@@ -38,7 +38,8 @@ VLS Library currently contains a single module but more modules are planned.
   
 ## Conan package manager
 Install python3:
- - https://www.python.org/downloads/
+ - use windows store to install python3 or download from https://www.python.org/downloads/
+ - Note: Make sure you remove any installation of python 2.x
 
 Install Conan using pip:
  - Open command prompt

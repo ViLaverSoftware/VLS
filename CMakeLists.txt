@@ -1,30 +1,34 @@
 cmake_minimum_required(VERSION 3.12)
+cmake_policy(SET CMP0091 NEW)
 
 project(VLS VERSION 1.0.0)
 
+# This is needed when building shared libraries with MSVC compiler or it will not create any .lib files to link with
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 # Add options to enable tests and examples
-option(TEST_VLS_ALL "All VLS modules unit tests" OFF)
+option(TEST_VLS_ALL "All VLS modules unit tests" ON)
 option(EXAMPLES_VLS_ALL "All VLS modules examples" OFF)
 
-option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
 set(CompilerFlags
-        CMAKE_CXX_FLAGS
-        CMAKE_CXX_FLAGS_DEBUG
-        CMAKE_CXX_FLAGS_RELEASE
-        CMAKE_C_FLAGS
-        CMAKE_C_FLAGS_DEBUG
-        CMAKE_C_FLAGS_RELEASE
-        )
-foreach(CompilerFlag ${CompilerFlags})
-  if(${BUILD_SHARED_LIBS})
-      string(REPLACE "/MT" "/MD" ${CompilerFlag} "${${CompilerFlag}}")
-  else()
-      string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
-  endif()
-endforeach()
+  CMAKE_CXX_FLAGS
+  CMAKE_CXX_FLAGS_DEBUG
+  CMAKE_CXX_FLAGS_RELEASE
+  CMAKE_C_FLAGS
+  CMAKE_C_FLAGS_DEBUG
+  CMAKE_C_FLAGS_RELEASE
+)
+
+if(${BUILD_SHARED_LIBS})
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+else()
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
 
 
 add_subdirectory(Log)
 add_subdirectory(Converter)
 add_subdirectory(Event)
-add_subdirectory(Properties)
+#add_subdirectory(Properties)
