@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include <memory>
 #include <string>
 
 #ifdef __cpp_lib_source_location

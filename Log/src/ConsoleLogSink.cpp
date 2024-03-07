@@ -10,7 +10,7 @@ std::string ConsoleLogSink::name() const { return "ConsoleLogSink"; }
 
 #ifdef __cpp_lib_source_location
 void ConsoleLogSink::privateLog(LogLevel level, const std::string& message,
-                                const std::source_location location) const {
+                                const std::source_location /*location*/) const {
   if (level >= LogLevel::Error) {
     std::cerr << message << std::endl;
     //    std::cerr << location.file_name() << "("

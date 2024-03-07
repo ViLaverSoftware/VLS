@@ -23,8 +23,6 @@
 
 #include <VLS/Log/LogSink.h>
 
-#include <memory>
-
 namespace VLS::Log {
 class LogSinkMock : public LogSink {
  public:
