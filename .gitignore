@@ -1,4 +1,4 @@
-*.pro.user
+﻿*.pro.user
 *.pro.user*
 CMakeLists.txt.user
 *build-*

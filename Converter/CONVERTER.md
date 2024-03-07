@@ -1,4 +1,4 @@
-# Converter Module {#converter}
+﻿# Converter Module {#converter}
 
 Work in progress
 

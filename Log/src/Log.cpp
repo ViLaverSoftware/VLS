@@ -1,4 +1,4 @@
-#include <VLS/Log/Log.h>
+﻿#include <VLS/Log/Log.h>
 #include <VLS/Log/LogHandler.h>
 
 namespace VLS {

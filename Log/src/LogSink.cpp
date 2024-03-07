@@ -1,4 +1,4 @@
-#include <VLS/Log/LogSink.h>
+﻿#include <VLS/Log/LogSink.h>
 
 namespace VLS::Log {
 

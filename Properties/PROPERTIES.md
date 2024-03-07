@@ -1,4 +1,4 @@
-# Properties Module {#properties}
+﻿# Properties Module {#properties}
 
 Work in progress
 

@@ -1,6 +1,6 @@
-/*
+﻿/*
  * Copyright 2020 Vilaversoftware IVS (http://vilaversoftware.dk/)
- * Author: Mikkel N?hr L?vgreen (ml@vilaversoftware.dk)
+ * Author: Mikkel Nøhr Løvgreen (ml@vilaversoftware.dk)
  * ------------------------------------------------------------------------
  * Licensed to Vilaversoftware IVS who licenses this file to you under the
  * Apache License, Version 2.0 (the "License"); you may not use this file

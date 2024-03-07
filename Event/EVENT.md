@@ -1,4 +1,4 @@
-# Event Module {#event}
+﻿# Event Module {#event}
 
 Events are the backbone of GUI applications but they are also very useful in other application where you want separation of concerns.
 

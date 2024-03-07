@@ -1,4 +1,4 @@
-#include <VLS/Log/ConsoleLogSink.h>
+﻿#include <VLS/Log/ConsoleLogSink.h>
 
 #include <iostream>
 

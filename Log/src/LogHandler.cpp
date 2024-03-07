@@ -1,4 +1,4 @@
-
+﻿
 #include <VLS/Log/LogHandler.h>
 
 #include <iostream>

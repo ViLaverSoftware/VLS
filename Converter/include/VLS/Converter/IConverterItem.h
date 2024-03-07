@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2020 Vilaversoftware IVS (http://vilaversoftware.dk/)
  * Author: Mikkel Nøhr Løvgreen (ml@vilaversoftware.dk)
  * ------------------------------------------------------------------------

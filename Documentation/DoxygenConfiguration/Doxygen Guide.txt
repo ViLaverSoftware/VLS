@@ -1,4 +1,4 @@
-General Instructions for using doxygen for newcomers
+﻿General Instructions for using doxygen for newcomers
 
 Step 0: Install Doxygen from : http://www.doxygen.nl/download.html.
 
