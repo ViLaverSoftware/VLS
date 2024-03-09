@@ -11,8 +11,8 @@ class ConsoleLogSink : public AbstractLogSink {
 
  protected:
 #ifdef __cpp_lib_source_location
-  void privateLog(LogLevel level, const std::string& message,
-                  const std::source_location location) const override;
+  void privateLog(LogLevel level, const std::string &message,
+                  const std::source_location &location) const override;
 #else
   void privateLog(LogLevel level, const std::string& message) const override;
 #endif

@@ -30,7 +30,7 @@ void LogHandler::clearLogSinks() {
 
 #ifdef __cpp_lib_source_location
 void LogHandler::privateLog(LogLevel level, const std::string& message,
-                            const std::source_location location) const {
+                            const std::source_location& location) const {
   std::scoped_lock<std::mutex> lock(m_sinkMutex);
   for (auto& logSink : m_logSinks) {
     auto sharedPtr = logSink.lock();

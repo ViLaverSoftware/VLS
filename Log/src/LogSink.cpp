@@ -23,7 +23,7 @@ const char *logLevelName(LogLevel value) {
 
 #ifdef __cpp_lib_source_location
 void AbstractLogSink::log(LogLevel level, const std::string &message,
-                          const std::source_location location) const {
+                          const std::source_location &location) const {
   if (level >= m_minLogLevel) {
     privateLog(level, message, location);
   }

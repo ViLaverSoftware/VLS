@@ -27,7 +27,8 @@ class AbstractLogSink {
 
 #ifdef __cpp_lib_source_location
   void log(LogLevel level, const std::string& message,
-           const std::source_location location = std::source_location()) const;
+           const std::source_location& location =
+               std::source_location::current()) const;
 #else
   void log(LogLevel level, const std::string& message) const;
 #endif
@@ -38,7 +39,7 @@ class AbstractLogSink {
  protected:
 #ifdef __cpp_lib_source_location
   virtual void privateLog(LogLevel level, const std::string& message,
-                          const std::source_location location) const = 0;
+                          const std::source_location& location) const = 0;
 #else
   virtual void privateLog(LogLevel level, const std::string& message) const = 0;
 #endif

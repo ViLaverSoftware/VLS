@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2020 Vilaversoftware IVS (http://vilaversoftware.dk/)
  * Author: Mikkel Nøhr Løvgreen (ml@vilaversoftware.dk)
  * ------------------------------------------------------------------------
@@ -16,24 +16,31 @@
  * limitations under the License.
  */
 #pragma warning(push, 0)
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #pragma warning(pop)
 
-#include <VLS/Event/EventLoop.h>
+#include <VLS/Log/ConsoleLogSink.h>
+#include <VLS/Log/Log.h>
+#include <VLS/Log/LogHandler.h>
 
-#include <io.h>
-#include <map>
 #include <memory>
-#include <string>
 
-TEST(VLSEventLoop, Contructor) {
-  VLS::Event::EventLoop eventLoop;
-  bool value = false;
-  eventLoop.Enqueue([&value]() { value = true; });
-  EXPECT_FALSE(value);
-  eventLoop.Start();
-  eventLoop.Stop();
-  EXPECT_TRUE(value);
+using ::testing::_;
+using ::testing::StrictMock;
+
+using namespace VLS::Log;
+
+TEST(VLSConsoleLogSink, PrintVisualTest) {
+  auto sink = std::make_shared<StrictMock<ConsoleLogSink>>();
+  LogHandler::instance()->addLogSink(sink);
+
+  const char* message = "Hello world!";
+
+  VLS::logTrace(message);
+  VLS::logDebug(message);
+  VLS::logInfo(message);
+  VLS::logWarning(message);
+  VLS::logError(message);
+  VLS::logCritical(message);
 }
-
-TEST(VKSEventLoop, Test) { VLS::Event::EventLoop eventLoop; }

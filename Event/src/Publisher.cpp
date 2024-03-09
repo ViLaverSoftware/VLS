@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "VLS/Event/Publisher.h"
+#include <VLS/Event/Publisher.h>
 
 #include <assert.h>
 
-#include "VLS/Event/Subscriber.h"
+#include <VLS/Event/Subscriber.h>
 
 namespace VLS::Event {
 

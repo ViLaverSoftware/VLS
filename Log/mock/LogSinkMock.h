@@ -29,7 +29,7 @@ class LogSinkMock : public AbstractLogSink {
   MOCK_METHOD(std::string, name, (), (const, override));
 #ifdef __cpp_lib_source_location
   MOCK_METHOD(void, privateLog,
-              (LogLevel, const std::string&, const std::source_location),
+              (LogLevel, const std::string&, const std::source_location&),
               (const, override));
 #else
   MOCK_METHOD(void, privateLog, (LogLevel, const std::string&),

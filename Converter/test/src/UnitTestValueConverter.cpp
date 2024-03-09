@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 #pragma warning(push, 0)
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #pragma warning(pop)
 
 #include <VLS/Converter/ValueConverter.h>
@@ -25,7 +25,7 @@ using namespace VLS::Converter;
 
 TEST(VLSValueConverter, DevelopmentTests) {
   int intValue = 35;
-  ValueConverter intValueC( intValue );
+  ValueConverter intValueC(intValue);
 
   EXPECT_EQ(intValueC.value<std::string>(), "35");
 
