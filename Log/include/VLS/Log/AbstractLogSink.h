@@ -12,10 +12,12 @@ enum class LogLevel { Trace, Debug, Info, Warning, Error, Critical };
 
 const char* logLevelName(LogLevel value);
 
-
 /**
- * @brief The AbstractLogSink class is the abstract base class for VLS logging. It can filter log messages based on the min log level. The default value is Trace wich forwards all log messages.
- * The AbstractLogSink class must be used when a custom log sink is created, but it is also as base class for the LogHandler.
+ * @brief The AbstractLogSink class is the abstract base class for VLS logging.
+ * It can filter log messages based on the min log level. The default value is
+ * Trace wich forwards all log messages. The AbstractLogSink class must be used
+ * when a custom log sink is created, but it is also as base class for the
+ * LogHandler.
  */
 class AbstractLogSink {
  public:

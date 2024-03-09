@@ -36,7 +36,7 @@ class ValueConverter {
   bool set(const T& value, const std::string& format = std::string()) noexcept;
 
   bool set(const char* value,
-           const std::string &format = std::string()) noexcept;
+           const std::string& format = std::string()) noexcept;
 
   const type_info& type() const;
 

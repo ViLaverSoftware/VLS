@@ -22,8 +22,6 @@
 #include <VLS/Event/IEventHandler.h>
 #include <VLS/Event/Publisher.h>
 
-#include <chrono>
-#include <future>
 #include <memory>
 #include <vector>
 

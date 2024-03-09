@@ -2,7 +2,7 @@
 
 namespace VLS::Log {
 
-const char* logLevelName(LogLevel value) {
+const char *logLevelName(LogLevel value) {
   switch (value) {
     case LogLevel::Trace:
       return "Trace";
@@ -36,8 +36,8 @@ void AbstractLogSink::log(LogLevel level, const std::string &message) const {
 }
 #endif
 
-LogLevel LogSink::filterLogLevel() const { return m_filterLogLevel; }
+LogLevel AbstractLogSink::minLogLevel() const { return m_minLogLevel; }
 
-void LogSink::setFilterLogLevel(LogLevel value) { m_filterLogLevel = value; }
+void AbstractLogSink::setMinLogLevel(LogLevel value) { m_minLogLevel = value; }
 
 }  // namespace VLS::Log

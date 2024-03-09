@@ -17,10 +17,8 @@
  */
 #pragma once
 
-#include <future>
-
-#include "VLS/Event/IEventLoop.h"
-#include "VLS/Event/Subscriber.h"
+#include <VLS/Event/IEventLoop.h>
+#include <VLS/Event/Subscriber.h>
 
 namespace VLS::Event {
 

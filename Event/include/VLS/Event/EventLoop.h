@@ -23,8 +23,8 @@
 #include <string>
 #include <thread>
 
-#include "VLS/Event/IEventLoop.h"
-#include "VLS/Event/SafeQueue.h"
+#include <VLS/Event/IEventLoop.h>
+#include <VLS/Event/SafeQueue.h>
 
 namespace VLS::Event {
 
@@ -46,7 +46,7 @@ class EventLoop : public IEventLoop {
   /// Destructor stops the event loop if it is running and waits for it to end
   /// before returning.
   /// </summary>
-  ~EventLoop();
+  ~EventLoop() override;
 
   /// <summary>
   /// Adds the callable to the event loop function queue.
