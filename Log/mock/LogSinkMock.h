@@ -21,10 +21,10 @@
 #include <gmock/gmock.h>
 #pragma warning(pop)
 
-#include <VLS/Log/LogSink.h>
+#include <VLS/Log/AbstractLogSink.h>
 
 namespace VLS::Log {
-class LogSinkMock : public LogSink {
+class LogSinkMock : public AbstractLogSink {
  public:
   MOCK_METHOD(std::string, name, (), (const, override));
 #ifdef __cpp_lib_source_location

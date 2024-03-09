@@ -12,9 +12,14 @@ enum class LogLevel { Trace, Debug, Info, Warning, Error, Critical };
 
 const char* logLevelName(LogLevel value);
 
-class LogSink {
+
+/**
+ * @brief The AbstractLogSink class is the abstract base class for VLS logging. It can filter log messages based on the min log level. The default value is Trace wich forwards all log messages.
+ * The AbstractLogSink class must be used when a custom log sink is created, but it is also as base class for the LogHandler.
+ */
+class AbstractLogSink {
  public:
-  virtual ~LogSink() = default;
+  virtual ~AbstractLogSink() = default;
 
   virtual std::string name() const = 0;
 
@@ -25,8 +30,8 @@ class LogSink {
   void log(LogLevel level, const std::string& message) const;
 #endif
 
-  LogLevel filterLogLevel() const;
-  void setFilterLogLevel(LogLevel value);
+  LogLevel minLogLevel() const;
+  void setMinLogLevel(LogLevel value);
 
  protected:
 #ifdef __cpp_lib_source_location
@@ -36,7 +41,7 @@ class LogSink {
   virtual void privateLog(LogLevel level, const std::string& message) const = 0;
 #endif
 
-  LogLevel m_filterLogLevel = LogLevel::Trace;
+  LogLevel m_minLogLevel = LogLevel::Trace;
 };
 
 }  // namespace VLS::Log

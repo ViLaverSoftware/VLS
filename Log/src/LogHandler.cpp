@@ -5,7 +5,7 @@
 
 namespace VLS::Log {
 
-LogHandler::LogHandler() : LogSink() {}
+LogHandler::LogHandler() : AbstractLogSink() {}
 
 std::shared_ptr<LogHandler>& LogHandler::instance() {
   static std::shared_ptr<LogHandler> s_logHandler =
@@ -15,7 +15,7 @@ std::shared_ptr<LogHandler>& LogHandler::instance() {
 
 std::string LogHandler::name() const { return "LogHandler"; }
 
-void LogHandler::addLogSink(std::weak_ptr<LogSink> logSink) {
+void LogHandler::addLogSink(std::weak_ptr<AbstractLogSink> logSink) {
   if (logSink.expired()) {
     return;
   }

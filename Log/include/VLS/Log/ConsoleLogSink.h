@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include <VLS/Log/LogSink.h>
+#include <VLS/Log/AbstractLogSink.h>
 
 namespace VLS::Log {
-class ConsoleLogSink : public LogSink {
+class ConsoleLogSink : public AbstractLogSink {
  public:
   ConsoleLogSink();
 

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <VLS/Log/LogSink.h>
+#include <VLS/Log/AbstractLogSink.h>
 
 namespace VLS {
 #ifdef __cpp_lib_source_location

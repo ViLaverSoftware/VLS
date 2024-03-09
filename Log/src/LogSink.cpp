@@ -1,4 +1,4 @@
-﻿#include <VLS/Log/LogSink.h>
+﻿#include <VLS/Log/AbstractLogSink.h>
 
 namespace VLS::Log {
 
@@ -22,15 +22,15 @@ const char* logLevelName(LogLevel value) {
 }
 
 #ifdef __cpp_lib_source_location
-void LogSink::log(LogLevel level, const std::string& message,
-                  const std::source_location location) const {
-  if (level >= m_filterLogLevel) {
+void AbstractLogSink::log(LogLevel level, const std::string &message,
+                          const std::source_location location) const {
+  if (level >= m_minLogLevel) {
     privateLog(level, message, location);
   }
 }
 #else
-void LogSink::log(LogLevel level, const std::string& message) const {
-  if (level >= m_filterLogLevel) {
+void AbstractLogSink::log(LogLevel level, const std::string &message) const {
+  if (level >= m_minLogLevel) {
     privateLog(level, message);
   }
 }
