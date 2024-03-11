@@ -18,8 +18,7 @@ void ConsoleLogSink::privateLog(LogLevel level, const std::string& message,
   std::thread::id this_id = std::this_thread::get_id();
   std::osyncstream synced_stream((level >= LogLevel::Error) ? std::cerr
                                                             : std::cout);
-  synced_stream << std::format("{:%Y-%m-%d %H:%M:%OS} |",
-                               std::chrono::system_clock::now())
+  synced_stream << std::format("{:%F %T} |", std::chrono::system_clock::now())
                 << this_id
                 << std::format("| {}({}, {}): {}", location.file_name(),
                                location.line(), location.column(), message)
