@@ -17,7 +17,6 @@ function( add_VLS_library_examples name )
 
   target_link_libraries(${examples_name} VLS::${name})
 
-  add_executable( VLS::EXAMPLES::${name} ALIAS ${examples_name})
-  message( "-- VLS: Executable target declared 'VLS::Examples::${name}'" )
+  message( "-- VLS: Executable target declared 'VLSExamples${name}'" )
 
 endfunction()

@@ -36,7 +36,6 @@ function( add_VLS_library_test name )
 
   gtest_add_tests( TARGET ${test_name} )
 
-  message( "-- VLS: Executable target declared 'VLS::Test::${name}'" )
-  add_executable( VLS::Test::${name} ALIAS ${test_name})
+  message( "-- VLS: Executable target declared 'VLSTest${name}'" )
 
 endfunction()
