@@ -23,6 +23,7 @@
 #include <VLS/Event/Publisher.h>
 
 #include <memory>
+#include <mutex>
 #include <vector>
 
 // Multiple subscriptions are allowed for each subscriber pr publisher as

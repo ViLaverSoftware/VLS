@@ -22,11 +22,10 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_link_libraries(${PROJECT_NAME} PUBLIC VLSConverter VLSEvent)
 
 install(
-    TARGETS ${PROJECT_NAME}
-    LIBRARY
-        DESTINATION lib
-    ARCHIVE
-        DESTINATION lib
+  TARGETS ${PROJECT_NAME}
+  LIBRARY
+  ARCHIVE
+  RUNTIME
 )
 
 install(

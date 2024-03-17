@@ -3,17 +3,23 @@
 find_package(GTest)
 
 if (${GTest_FOUND})
-    file(GLOB SOURCES "src/*.cpp")
+  file(GLOB SOURCES "src/*.cpp")
 
-    add_executable(UnitTest${PROJECT_NAME} ${SOURCES})
+  add_executable(UnitTest${PROJECT_NAME} ${SOURCES})
 
-    target_link_libraries(UnitTest${PROJECT_NAME}
-        ${PROJECT_NAME}
-        gtest::gtest)
+  target_link_libraries(UnitTest${PROJECT_NAME}
+    ${PROJECT_NAME}
+    gtest::gtest
+  )
 
-    include(GoogleTest)
+  install(
+    TARGETS UnitTest${PROJECT_NAME}
+    RUNTIME
+  )
 
-    gtest_add_tests(TARGET UnitTest${PROJECT_NAME})
+  include(GoogleTest)
+
+  gtest_add_tests(TARGET UnitTest${PROJECT_NAME})
 else()
     message( "WARNING GTest not found. UnitTest${PROJECT_NAME} target not created." )
 endif()
