@@ -6,7 +6,7 @@ include(add-vls-library-test)
 add_VLS_library( Converter )
 
 target_link_libraries( VLSConverter
-  VLS::Log
+  PUBLIC VLS::Log
 )
 
 add_VLS_library_test( Converter )

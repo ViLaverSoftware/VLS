@@ -10,7 +10,6 @@ function( add_VLS_library_test name )
   set( test_name VLSTest${name})
 
   find_package(GTest)
-
   if ( NOT ${GTest_FOUND})
     message( "WARNING GTest not found. ${test_name} target not created." )
     return()
