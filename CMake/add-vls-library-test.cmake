@@ -19,7 +19,9 @@ function( add_VLS_library_test name )
 
   add_executable( ${test_name} ${TEST_SOURCES})
 
+  target_compile_features( ${test_name} PUBLIC cxx_std_20 )
   set_target_properties( ${test_name} PROPERTIES LINKER_LANGUAGE CXX )
+  set_target_properties( ${test_name} PROPERTIES COMPILE_WARNING_AS_ERROR ON)
 
   target_link_libraries( ${test_name}
     PRIVATE VLS::${name}

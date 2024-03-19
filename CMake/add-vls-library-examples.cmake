@@ -13,7 +13,9 @@ function( add_VLS_library_examples name )
 
   add_executable(${examples_name} ${EXAMPLES_SOURCES})
 
+  target_compile_features( ${examples_name} PUBLIC cxx_std_20 )
   set_target_properties( ${examples_name} PROPERTIES LINKER_LANGUAGE CXX )
+  set_target_properties( ${examples_name} PROPERTIES COMPILE_WARNING_AS_ERROR ON)
 
   target_link_libraries(${examples_name} VLS::${name})
 

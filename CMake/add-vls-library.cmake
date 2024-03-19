@@ -26,8 +26,9 @@ function( add_VLS_library name )
       PRIVATE src
     )
 
-    target_compile_features(${target_name} PUBLIC cxx_std_20)
+    target_compile_features( ${target_name} PUBLIC cxx_std_20 )
     set_target_properties( ${target_name} PROPERTIES LINKER_LANGUAGE CXX )
+    set_target_properties( ${target_name} PROPERTIES COMPILE_WARNING_AS_ERROR ON)
 
     install(
       TARGETS ${target_name}

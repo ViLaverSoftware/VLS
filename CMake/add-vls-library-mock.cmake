@@ -35,6 +35,11 @@ function( add_VLS_library_mock name )
     target_sources( ${mock_name} PUBLIC ${MOCK_HEADERS} )
     target_sources( ${mock_name} PRIVATE ${MOCK_SOURCES} )
 
+
+    target_compile_features( ${mock_name} PUBLIC cxx_std_20 )
+    set_target_properties( ${mock_name} PROPERTIES LINKER_LANGUAGE CXX )
+    set_target_properties( ${mock_name} PROPERTIES COMPILE_WARNING_AS_ERROR ON)
+
     target_include_directories( ${mock_name}
       mock
     )
