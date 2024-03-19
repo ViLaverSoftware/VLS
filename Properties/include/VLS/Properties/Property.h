@@ -26,9 +26,16 @@ template <typename T>
 class Property : public Converter::ValueConverter {
  public:
   Property();
+  virtual ~Property() = default;
+
+  template <typename T2>
+  Property<T>& operator=(const Property<T2>& other);
 
   Property<T>& operator=(const Property<T>& other);
+
   Property<T>& operator=(const T& other);
+
+  Property<T>& operator=(const char* other);
 
   const T& value() const;
   using Converter::ValueConverter::value;
@@ -43,38 +50,44 @@ class Property : public Converter::ValueConverter {
   bool set(const char* value,
            const std::string& format = std::string()) noexcept;
 
-  Event::EventHandler<T> changed;
+  void bind(const Property<T>& other);
+
+  template <typename T2>
+  void bind(const Property<T2>& other);
+
+  Event::IEventHandler<T>& changed() const;
 
  protected:
   T m_data;
+  mutable Event::EventHandler<T> m_changed;
+  Event::Subscriber m_subscriber;
 };
-
-template <typename T>
-template <typename T2>
-bool Property<T>::set(const T2& value, const std::string& format) noexcept {
-  if (ValueConverter::set(value, format)) {
-    changed.Trigger(m_data);
-    return true;
-  }
-  return false;
-}
-
-template <typename T>
-bool Property<T>::set(const char* value, const std::string& format) noexcept {
-  return set(std::string(value), format);
-}
 
 template <typename T>
 Property<T>::Property() : VLS::Converter::ValueConverter(m_data) {}
 
 template <typename T>
+template <typename T2>
+Property<T>& Property<T>::operator=(const Property<T2>& other) {
+  bind(other);
+  return *this;
+}
+
+template <typename T>
 Property<T>& Property<T>::operator=(const Property<T>& other) {
-  return *this = other.get();
+  bind(other);
+  return *this;
 }
 
 template <typename T>
 Property<T>& Property<T>::operator=(const T& _value) {
   set(_value);
+  return *this;
+}
+
+template <typename T>
+Property<T>& Property<T>::operator=(const char* other) {
+  set(other);
   return *this;
 }
 
@@ -90,9 +103,54 @@ void Property<T>::get(T& value) const {
 
 template <typename T>
 void Property<T>::set(const T& value) {
+  m_subscriber.UnsubscribeAll();
   if (m_data != value) {
     m_data = value;
-    changed.Trigger(m_data);
+    m_changed.Trigger(m_data);
   }
 }
+
+template <typename T>
+template <typename T2>
+bool Property<T>::set(const T2& value, const std::string& format) noexcept {
+  m_subscriber.UnsubscribeAll();
+  if (ValueConverter::set(value, format)) {
+    m_changed.Trigger(m_data);
+    return true;
+  }
+  return false;
+}
+
+template <typename T>
+bool Property<T>::set(const char* value, const std::string& format) noexcept {
+  return set(std::string(value), format);
+}
+
+template <typename T>
+void Property<T>::bind(const Property<T>& other) {
+  set(other.value());
+  other.changed().Subscribe(m_subscriber, [this](const T& data) {
+    if (m_data != data) {
+      m_data = data;
+      m_changed.Trigger(data);
+    }
+  });
+}
+
+template <typename T>
+template <typename T2>
+void Property<T>::bind(const Property<T2>& other) {
+  set(other.value());
+  other.m_changed.Subscribe(m_subscriber, [this](const T2& data) {
+    if (ValueConverter::set(data)) {
+      m_changed.Trigger(m_data);
+    }
+  });
+}
+
+template <typename T>
+Event::IEventHandler<T>& Property<T>::changed() const {
+  return m_changed;
+}
+
 }  // namespace VLS::Properties

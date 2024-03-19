@@ -45,7 +45,7 @@ class EventRetriever {
 TEST(VLSEventHandler0, SuccessLamda) {
   Event::EventHandler<> eventHandler;
   int value = 0;
-  auto u = eventHandler.Subscribe([&value] { value = 42; });
+  auto u = eventHandler.Subscribe([&value]() { value = 42; });
   EXPECT_EQ(value, 0);
   eventHandler.Trigger();
   EXPECT_EQ(value, 42);
@@ -87,7 +87,7 @@ TEST(VLSEventHandler0, ScopeUnsubscribe2) {
   {
     Event::EventHandler<> eventHandler;
     int value = 0;
-    u = eventHandler.Subscribe([&value] { value = 42; });
+    u = eventHandler.Subscribe([&value]() { value = 42; });
     EXPECT_EQ(u->PublisherCount(), 1);
   }
   // Event function handler is deleted before the unsubscribe object
@@ -97,7 +97,7 @@ TEST(VLSEventHandler0, ScopeUnsubscribe2) {
 TEST(VLSEventHandler0, ManualUnsubscribe) {
   Event::EventHandler<> eventHandler;
   int value = 0;
-  auto u = eventHandler.Subscribe([&value] { value = 42; });
+  auto u = eventHandler.Subscribe([&value]() { value = 42; });
   u->UnsubscribeAll();
   eventHandler.Trigger();
   EXPECT_EQ(value, 0);

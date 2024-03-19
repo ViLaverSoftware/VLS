@@ -21,15 +21,15 @@
 
 #include <VLS/Properties/Property.h>
 
+#include <VLS/Log/ConsoleLogSink.h>
 #include <VLS/Log/Log.h>
 #include <VLS/Log/LogHandler.h>
-#include <VLS/Log/ConsoleLogSink.h>
 
 using namespace VLS::Properties;
 
 TEST(VLSProperties, Test) {
   auto consoleSink = std::make_shared<Log::ConsoleLogSink>();
-  Log::LogHandler::instance()->addLogSink( consoleSink );
+  Log::LogHandler::instance()->addLogSink(consoleSink);
 
   Property<std::string> property;
   EXPECT_EQ(property.value(), "");
@@ -42,10 +42,20 @@ TEST(VLSProperties, Test) {
 TEST(VLSProperties, ChangedEvent) {
   std::string testValue;
   Property<std::string> property;
-  property.changed.SubscribePersistent([&testValue]( const std::string& value) {
-    testValue = value;
-  });
+  property.changed().SubscribePersistent(
+      [&testValue](const std::string& value) { testValue = value; });
 
   property.set(std::string("Hej"));
   EXPECT_EQ(testValue, "Hej");
+}
+
+TEST(VLSProperties, Bind_SameType) {
+  Property<std::string> p1;
+  Property<std::string> p2;
+
+  p1 = p2;
+
+  p2 = "Hej";
+
+  EXPECT_EQ(p1.value<std::string>(), "Hej");
 }

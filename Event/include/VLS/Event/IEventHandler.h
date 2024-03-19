@@ -38,6 +38,8 @@ namespace VLS::Event {
 template <typename... Types>
 class IEventHandler {
  public:
+  virtual ~IEventHandler() = default;
+
   /// <summary>
   /// Subscribes to the event by providing a callable that will be called when
   /// the event is triggered.
