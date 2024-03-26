@@ -17,7 +17,6 @@
  */
 #pragma once
 
-#include <VLS/Event/Bind.h>
 #include <VLS/Event/IEventLoop.h>
 #include <VLS/Event/Publisher.h>
 #include <VLS/Event/Subscriber.h>

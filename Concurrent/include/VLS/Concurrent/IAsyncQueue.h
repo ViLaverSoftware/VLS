@@ -17,32 +17,22 @@
  */
 #pragma once
 
-#include <iostream>
+#include <functional>
+#include <string>
 
-#include <VLS/Event/Bind.h>
+namespace VLS::Concurrent {
 
-#include "IBookPublisher.h"
-
-class BookSubscriber : private VLS::Event::Subscriber {
+class IAsyncQueue {
  public:
-  BookSubscriber(const std::string& name) : m_name(name) {}
+  virtual ~IAsyncQueue() = default;
 
-  void SubscribeToPublications(const IBookPublisher& bookPublisher) {
-    // Subscribe with a member function
-    bookPublisher.NewBookEvent().Subscribe(
-        m_subscriber,
-        VLS::Event::Func::Bind(this, &BookSubscriber::OnNewBookPublished));
-  }
+  virtual void exec(const std::function<void(void)>& func) = 0;
 
- private:
-  void OnNewBookPublished(const std::string& bookName) {
-    std::cout << "> Subscriber " << m_name
-              << " received a new book: " << bookName << std::endl;
-  }
+  virtual void wait() = 0;
 
-  // The subscriber class can hold event subscriptions and it will automatically
-  // unsubscribe when deallocated.
-  VLS::Event::Subscriber m_subscriber;
+  virtual bool sameThread() const = 0;
 
-  std::string m_name;
+  virtual const std::string& name() const = 0;
 };
+
+}  // namespace VLS::Concurrent

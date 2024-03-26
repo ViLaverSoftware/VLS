@@ -22,8 +22,10 @@
 
 namespace VLS::Properties {
 
+using PropertyBase = Converter::ValueConverter;
+
 template <typename T>
-class Property : public Converter::ValueConverter {
+class Property : public PropertyBase {
  public:
   Property();
   virtual ~Property() = default;
@@ -38,10 +40,10 @@ class Property : public Converter::ValueConverter {
   Property<T>& operator=(const char* other);
 
   const T& value() const;
-  using Converter::ValueConverter::value;
+  using PropertyBase::value;
 
   void get(T& value) const;
-  using Converter::ValueConverter::get;
+  using PropertyBase::get;
 
   void set(const T& value);
 
@@ -64,7 +66,7 @@ class Property : public Converter::ValueConverter {
 };
 
 template <typename T>
-Property<T>::Property() : VLS::Converter::ValueConverter(m_data) {}
+Property<T>::Property() : PropertyBase(m_data) {}
 
 template <typename T>
 template <typename T2>

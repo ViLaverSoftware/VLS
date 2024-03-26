@@ -17,7 +17,6 @@
  */
 #pragma once
 
-#include <VLS/Event/Bind.h>
 #include <VLS/Event/EventData.h>
 #include <VLS/Event/IEventHandler.h>
 #include <VLS/Event/Publisher.h>
@@ -47,8 +46,8 @@ namespace VLS::Event {
 /// When subscribing to an event, a function needs to be provided with a
 /// matching set of arguments. The function can be a callable
 /// std::function<void(...)> (lambda) or a free function. A member function can
-/// also be used, but need to be bound to a callable first. See
-/// VLS/Event/Bind.h.
+/// also be used, but need to be bound to a callable first.
+/// See VLS/Event/Bind.h.
 ///
 /// The EventHandler also supports async execution of events.
 /// When subscribing to events an EventLoop can be provided. Instead of calling

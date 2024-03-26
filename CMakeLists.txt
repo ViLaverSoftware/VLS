@@ -35,5 +35,6 @@ add_custom_target( CMake SOURCES ${CMAKE_SOURCES} )
 
 add_subdirectory(Log)
 add_subdirectory(Converter)
+add_subdirectory(Concurrent)
 add_subdirectory(Event)
 add_subdirectory(Properties)

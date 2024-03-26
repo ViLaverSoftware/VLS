@@ -21,6 +21,7 @@
 
 #include <functional>
 
+#include <VLS/Event/Bind.h>
 #include <VLS/Event/EventHandler.h>
 #include <VLS/Event/EventLoop.h>
 

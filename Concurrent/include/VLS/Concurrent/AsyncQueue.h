@@ -17,32 +17,47 @@
  */
 #pragma once
 
-#include <iostream>
+#include <VLS/Concurrent/IAsyncQueue.h>
+#include <VLS/Concurrent/SafeQueue.h>
 
-#include <VLS/Event/Bind.h>
+#include <atomic>
+#include <functional>
+#include <map>
+#include <string>
+#include <thread>
 
-#include "IBookPublisher.h"
+namespace VLS::Concurrent {
 
-class BookSubscriber : private VLS::Event::Subscriber {
+class AsyncQueue : public IAsyncQueue {
  public:
-  BookSubscriber(const std::string& name) : m_name(name) {}
+  AsyncQueue(const std::string& name);
 
-  void SubscribeToPublications(const IBookPublisher& bookPublisher) {
-    // Subscribe with a member function
-    bookPublisher.NewBookEvent().Subscribe(
-        m_subscriber,
-        VLS::Event::Func::Bind(this, &BookSubscriber::OnNewBookPublished));
-  }
+  ~AsyncQueue() override;
+
+  void exec(const std::function<void(void)>& func) override;
+
+  void wait() override;
+
+  bool sameThread() const override;
+
+  const std::string& name() const override;
+
+  static const std::string& threadName();
 
  private:
-  void OnNewBookPublished(const std::string& bookName) {
-    std::cout << "> Subscriber " << m_name
-              << " received a new book: " << bookName << std::endl;
-  }
+  void run();
 
-  // The subscriber class can hold event subscriptions and it will automatically
-  // unsubscribe when deallocated.
-  VLS::Event::Subscriber m_subscriber;
+  std::thread m_thread;
+
+  SafeQueue<std::function<void(void)>> m_safeQueue;
+
+  std::atomic<bool> m_run = true;
 
   std::string m_name;
+
+  static std::map<std::thread::id, std::string> s_threadNameMap;
+  static std::string s_defaultThreadName;
+  static std::mutex s_threadNameMutex;
 };
+
+}  // namespace VLS::Concurrent

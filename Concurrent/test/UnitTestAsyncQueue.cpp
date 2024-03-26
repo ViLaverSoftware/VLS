@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2020 Vilaversoftware IVS (http://vilaversoftware.dk/)
  * Author: Mikkel Nøhr Løvgreen (ml@vilaversoftware.dk)
  * ------------------------------------------------------------------------
@@ -19,18 +19,24 @@
 #include <gtest/gtest.h>
 #pragma warning(pop)
 
-#include <VLS/Event/EventLoop.h>
+#include <VLS/Concurrent/AsyncQueue.h>
+
+#include <VLS/Log/ConsoleLogSink.h>
+#include <VLS/Log/LogHandler.h>
 
 #include <io.h>
 
 TEST(VLSEventLoop, Contructor) {
-  VLS::Event::EventLoop eventLoop;
+  auto sink = std::make_shared<VLS::Log::ConsoleLogSink>();
+  VLS::Log::LogHandler::instance()->addLogSink(sink);
+
+  VLS::Concurrent::AsyncQueue asyncQueue("TestThread");
   bool value = false;
-  eventLoop.Enqueue([&value]() { value = true; });
+  asyncQueue.exec([&value]() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    value = true;
+  });
   EXPECT_FALSE(value);
-  eventLoop.Start();
-  eventLoop.Stop();
+  asyncQueue.wait();
   EXPECT_TRUE(value);
 }
-
-TEST(VKSEventLoop, Test) { VLS::Event::EventLoop eventLoop; }
